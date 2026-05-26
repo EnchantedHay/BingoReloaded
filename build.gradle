@@ -1,12 +1,67 @@
 plugins {
-    id 'base'
+    id 'java'
+    id 'io.github.goooler.shadow' version '8.1.7'
+    id 'io.papermc.paperweight.userdev' version '2.0.0-beta.17'
+    id 'xyz.jpenilla.run-paper' version '3.0.2'
 }
 
-allprojects {
-    group = 'io.github.steaf23.bingoreloaded'
-    version = '3.4.2'
+group = 'io.github.steaf23.bingoreloaded'
+version = '3.4.2'
 
-    repositories {
-        mavenCentral()
+repositories {
+    mavenCentral()
+    maven {
+        name = "papermc-repo"
+        url = "https://repo.papermc.io/repository/maven-public/"
+    }
+    maven {
+        url = "https://repo.codemc.io/repository/maven-releases/"
+    }
+    maven {
+        url = "https://repo.extendedclip.com/content/repositories/placeholderapi/"
+    }
+}
+
+dependencies {
+    compileOnly "com.github.retrooper:packetevents-spigot:$packet_events_version"
+    compileOnly "me.clip:placeholderapi:2.11.7"
+
+    implementation "commons-io:commons-io:2.19.0"
+    implementation "com.google.code.gson:gson:2.13.1"
+    implementation "net.kyori:adventure-api:$adventure_version"
+    implementation "net.kyori:adventure-text-logger-slf4j:$adventure_version"
+    implementation "net.kyori:adventure-text-minimessage:$adventure_version"
+    implementation "net.kyori:adventure-text-serializer-plain:$adventure_version"
+    implementation "net.kyori:adventure-text-serializer-legacy:$adventure_version"
+
+    paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:$minecraft_version-R0.1-SNAPSHOT")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release.set(21)
+}
+
+tasks.jar {
+    archiveFileName.set("BingoReloaded-${project.version}-shallow.jar")
+    manifest {
+        attributes["paperweight-mappings-namespace"] = "mojang"
+    }
+}
+
+tasks.shadowJar {
+    archiveFileName.set("BingoReloaded-${project.version}.jar")
+    manifest {
+        attributes["paperweight-mappings-namespace"] = "mojang"
+    }
+}
+
+tasks.runServer {
+    downloadPlugins {
+        modrinth("packetevents", "$packet_events_version+spigot")
     }
 }
