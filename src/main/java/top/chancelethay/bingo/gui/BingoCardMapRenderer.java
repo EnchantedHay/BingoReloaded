@@ -2,8 +2,8 @@ package top.chancelethay.bingo.gui;
 
 import top.chancelethay.bingo.api.CardDisplayInfo;
 import top.chancelethay.bingo.cards.TaskCard;
-import top.chancelethay.bingo.lib.api.Position;
-import top.chancelethay.bingo.lib.api.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.Position;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
 import top.chancelethay.bingo.lib.data.core.DataStorage;
 import top.chancelethay.bingo.lib.data.core.json.JsonDataAccessor;
 import top.chancelethay.bingo.lib.data.core.json.JsonDataStorage;

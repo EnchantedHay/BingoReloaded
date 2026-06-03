@@ -1,10 +1,10 @@
 package top.chancelethay.bingo.gameloop.phase;
 
 import top.chancelethay.bingo.gameloop.BingoSession;
-import top.chancelethay.bingo.lib.api.InteractAction;
-import top.chancelethay.bingo.lib.api.item.StackHandle;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
-import top.chancelethay.bingo.lib.event.EventResult;
+import top.chancelethay.bingo.lib.platform.InteractAction;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
+import top.chancelethay.bingo.lib.events.EventResult;
 import top.chancelethay.bingo.settings.BingoSettings;
 import top.chancelethay.bingo.world.GameWorldManager;
 import top.chancelethay.bingo.world.Tasks;

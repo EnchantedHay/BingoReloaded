@@ -1,8 +1,8 @@
 package top.chancelethay.bingo.lib.inventory;
 
-import top.chancelethay.bingo.lib.api.PlatformResolver;
-import top.chancelethay.bingo.lib.api.item.InventoryHandlePaper;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.item.InventoryHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.inventory.Inventory;
@@ -14,7 +14,7 @@ public interface InventoryMenu extends Menu {
 	Inventory getInventory();
 
 	default void openInventory(PlayerHandle player) {
-		PlatformResolver.get().runTask(task -> player.openInventory(new InventoryHandlePaper(getInventory())));
+		ServerSoftware.get().runTask(task -> player.openInventory(new InventoryHandle(getInventory())));
 	}
 
 	static Component inputButtonText(Component buttonText) {

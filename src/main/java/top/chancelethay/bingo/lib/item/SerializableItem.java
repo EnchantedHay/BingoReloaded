@@ -1,6 +1,6 @@
 package top.chancelethay.bingo.lib.item;
 
-import top.chancelethay.bingo.lib.api.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
 import org.jetbrains.annotations.NotNull;
 
 

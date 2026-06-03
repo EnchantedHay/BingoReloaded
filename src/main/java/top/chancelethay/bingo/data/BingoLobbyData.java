@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.data;
 
 import top.chancelethay.bingo.BingoReloaded;
-import top.chancelethay.bingo.lib.api.WorldPosition;
+import top.chancelethay.bingo.lib.platform.WorldPosition;
 import top.chancelethay.bingo.lib.data.core.DataAccessor;
 import org.jetbrains.annotations.Nullable;
 

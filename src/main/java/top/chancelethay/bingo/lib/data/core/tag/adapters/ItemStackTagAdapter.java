@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.lib.data.core.tag.adapters;
 
-import top.chancelethay.bingo.lib.api.item.ItemType;
-import top.chancelethay.bingo.lib.api.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
 import top.chancelethay.bingo.lib.data.core.tag.Tag;
 import top.chancelethay.bingo.lib.data.core.tag.TagAdapter;
 import top.chancelethay.bingo.lib.data.core.tag.TagDataType;

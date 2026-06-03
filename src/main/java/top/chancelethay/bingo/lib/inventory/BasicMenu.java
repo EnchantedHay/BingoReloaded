@@ -1,9 +1,9 @@
 package top.chancelethay.bingo.lib.inventory;
 
-import top.chancelethay.bingo.lib.api.MenuBoard;
-import top.chancelethay.bingo.lib.api.item.ItemTypePaper;
-import top.chancelethay.bingo.lib.api.item.StackHandlePaper;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.data.core.DataStorage;
 import top.chancelethay.bingo.lib.inventory.action.MenuAction;
 import top.chancelethay.bingo.lib.inventory.action.MenuItemGroup;
@@ -27,7 +27,7 @@ public class BasicMenu implements InventoryMenu
 {
     public static Component pluginTitlePrefix = Component.empty();
 
-    public static ItemTemplate BLANK = new ItemTemplate(ItemTypePaper.of(Material.BLACK_STAINED_GLASS_PANE), null)
+    public static ItemTemplate BLANK = new ItemTemplate(ItemType.of(Material.BLACK_STAINED_GLASS_PANE), null)
             .setNoTooltip(true);
 
     private final Inventory inventory;
@@ -99,7 +99,7 @@ public class BasicMenu implements InventoryMenu
 
         itemGroup.addItem(item, action);
         // Replace/ set new item in its target slot
-        getInventory().setItem(item.getSlot(), ((StackHandlePaper)item.buildItem()).handle());
+        getInventory().setItem(item.getSlot(), item.buildItem().handle());
 
         return this;
     }

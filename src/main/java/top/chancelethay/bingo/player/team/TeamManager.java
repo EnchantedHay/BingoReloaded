@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.player.team;
 
 import top.chancelethay.bingo.data.TeamData;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.player.BingoParticipant;
 import top.chancelethay.bingo.settings.BingoSettings;
 import org.jetbrains.annotations.NotNull;

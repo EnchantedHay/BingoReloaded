@@ -7,7 +7,7 @@ import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientCustomClickAction;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientNameItem;
-import top.chancelethay.bingo.lib.api.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
 import top.chancelethay.bingo.lib.events.PlayerDisplayAnvilTextChangedEvent;
 import top.chancelethay.bingo.lib.events.PlayerDisplayCustomClickActionEvent;
 import org.bukkit.Bukkit;

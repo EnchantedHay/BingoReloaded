@@ -1,8 +1,8 @@
 package top.chancelethay.bingo.lib.inventory;
 
-import top.chancelethay.bingo.lib.api.MenuBoard;
-import top.chancelethay.bingo.lib.api.item.ItemTypePaper;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.item.ItemTemplate;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
 import net.kyori.adventure.text.Component;
@@ -20,8 +20,8 @@ import java.util.function.Consumer;
 
 public final class ColorPickerMenu extends BasicMenu
 {
-    private static final ItemTemplate NEXT = new ItemTemplate(53, ItemTypePaper.of(Material.STRUCTURE_VOID), Component.text("Scroll Left").color(NamedTextColor.LIGHT_PURPLE).decorate(TextDecoration.BOLD));
-    private static final ItemTemplate PREVIOUS = new ItemTemplate(45, ItemTypePaper.of(Material.BARRIER), Component.text("Scroll Right").color(NamedTextColor.LIGHT_PURPLE).decorate(TextDecoration.BOLD));
+    private static final ItemTemplate NEXT = new ItemTemplate(53, ItemType.of(Material.STRUCTURE_VOID), Component.text("Scroll Left").color(NamedTextColor.LIGHT_PURPLE).decorate(TextDecoration.BOLD));
+    private static final ItemTemplate PREVIOUS = new ItemTemplate(45, ItemType.of(Material.BARRIER), Component.text("Scroll Right").color(NamedTextColor.LIGHT_PURPLE).decorate(TextDecoration.BOLD));
 
     private static final int HUE_AMOUNT = 25;
 
@@ -39,7 +39,7 @@ public final class ColorPickerMenu extends BasicMenu
         for (int i = 0; i < HUE_AMOUNT; i++) {
             Color col = Color.getHSBColor(i * (1.0f / (HUE_AMOUNT - 1)), 1.0f, 1.0f);
             TextColor textColor = TextColor.color(col.getRGB());
-            hueItems.add(ItemTemplate.createColoredLeather(textColor, ItemTypePaper.of(Material.LEATHER_CHESTPLATE))
+            hueItems.add(ItemTemplate.createColoredLeather(textColor, ItemType.of(Material.LEATHER_CHESTPLATE))
                     .setCompareKey(textColor.asHexString()));
         }
 
@@ -50,7 +50,7 @@ public final class ColorPickerMenu extends BasicMenu
 
         for (int i = 0; i < 45; i++) {
             TextColor color = TextColor.color(0);
-            addItem(ItemTemplate.createColoredLeather(color, ItemTypePaper.of(Material.LEATHER_CHESTPLATE))
+            addItem(ItemTemplate.createColoredLeather(color, ItemType.of(Material.LEATHER_CHESTPLATE))
                     .setCompareKey(color.asHexString()));
         }
 
@@ -103,7 +103,7 @@ public final class ColorPickerMenu extends BasicMenu
 
                 TextColor textColor = TextColor.color(targetColor.getRGB());
 
-                ItemTemplate item = ItemTemplate.createColoredLeather(textColor, ItemTypePaper.of(Material.LEATHER_CHESTPLATE))
+                ItemTemplate item = ItemTemplate.createColoredLeather(textColor, ItemType.of(Material.LEATHER_CHESTPLATE))
                         .setCompareKey(textColor.asHexString())
                         .setSlot(x, y);
                 addItem(item);

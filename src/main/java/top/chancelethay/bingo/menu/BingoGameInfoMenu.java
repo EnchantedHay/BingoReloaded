@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.menu;
 
 import top.chancelethay.bingo.gameloop.BingoSession;
-import top.chancelethay.bingo.lib.menu.InfoMenu;
+import top.chancelethay.bingo.lib.display.InfoMenu;
 import top.chancelethay.bingo.lib.util.ComponentUtils;
 import top.chancelethay.bingo.player.BingoParticipant;
 import top.chancelethay.bingo.player.team.BingoTeam;

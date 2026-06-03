@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.tasks.data;
 
 import top.chancelethay.bingo.api.CardDisplayInfo;
-import top.chancelethay.bingo.lib.api.item.ItemType;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
 import net.kyori.adventure.text.Component;
 
 import java.util.Collections;

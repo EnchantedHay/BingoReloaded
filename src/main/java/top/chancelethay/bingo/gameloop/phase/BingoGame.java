@@ -13,17 +13,16 @@ import top.chancelethay.bingo.data.config.BingoOptions;
 import top.chancelethay.bingo.gameloop.BingoSession;
 import top.chancelethay.bingo.item.BingoItems;
 import top.chancelethay.bingo.item.GameItem;
-import top.chancelethay.bingo.lib.api.BiomeType;
-import top.chancelethay.bingo.lib.api.InteractAction;
-import top.chancelethay.bingo.lib.api.PlayerGamemode;
-import top.chancelethay.bingo.lib.api.ServerSoftware;
-import top.chancelethay.bingo.lib.api.WorldHandle;
-import top.chancelethay.bingo.lib.api.WorldPosition;
-import top.chancelethay.bingo.lib.api.item.ItemType;
-import top.chancelethay.bingo.lib.api.item.StackHandle;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
-import top.chancelethay.bingo.lib.event.EventResult;
-import top.chancelethay.bingo.lib.event.EventResults;
+import top.chancelethay.bingo.lib.platform.InteractAction;
+import top.chancelethay.bingo.lib.platform.PlayerGamemode;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.WorldHandle;
+import top.chancelethay.bingo.lib.platform.WorldPosition;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
+import top.chancelethay.bingo.lib.events.EventResult;
+import top.chancelethay.bingo.lib.events.EventResults;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
 import top.chancelethay.bingo.lib.world.BlockHelper;
 import top.chancelethay.bingo.menu.BingoGameInfoMenu;
@@ -417,10 +416,10 @@ public class BingoGame implements GamePhase
 		// MineHunt-style: the world was freshly regenerated for this round, so scatter all participants
 		// safely around its spawn (async, avoiding water/hazards) instead of teleporting to far-away
 		// coordinates inside a reused world.
-		org.bukkit.World bukkitWorld = ((top.chancelethay.bingo.lib.api.WorldHandlePaper) world).handle();
+		org.bukkit.World bukkitWorld = world.handle();
 		java.util.List<org.bukkit.entity.Player> bukkitPlayers = new java.util.ArrayList<>();
 		for (BingoParticipant p : getTeamManager().getParticipants()) {
-			p.sessionPlayer().ifPresent(ph -> bukkitPlayers.add(((top.chancelethay.bingo.lib.api.player.PlayerHandlePaper) ph).handle()));
+			p.sessionPlayer().ifPresent(ph -> bukkitPlayers.add(ph.handle()));
 		}
 
 		int scatterRadius = config.getOptionValue(BingoOptions.WORLD_RESET_SCATTER_RADIUS);
@@ -432,7 +431,7 @@ public class BingoGame implements GamePhase
 			// the game world instead of sending them back to the lobby.
 			for (BingoParticipant p : getTeamManager().getParticipants()) {
 				p.sessionPlayer().ifPresent(ph -> {
-					org.bukkit.Location loc = ((top.chancelethay.bingo.lib.api.player.PlayerHandlePaper) ph).handle().getLocation();
+					org.bukkit.Location loc = ph.handle().getLocation();
 					WorldPosition spawn = new WorldPosition(world, loc.getX(), loc.getY(), loc.getZ());
 					ph.setRespawnPoint(spawn, true);
 					playerSpawnPoints.put(ph.uniqueId(), spawn);

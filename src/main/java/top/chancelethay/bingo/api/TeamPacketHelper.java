@@ -3,8 +3,7 @@ package top.chancelethay.bingo.api;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
-import top.chancelethay.bingo.lib.api.player.PlayerHandlePaper;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import net.kyori.adventure.text.Component;
 
 import java.util.Collection;
@@ -22,11 +21,11 @@ public class TeamPacketHelper
                 WrapperPlayServerTeams.OptionData.NONE
         );
         PacketWrapper<WrapperPlayServerTeams> packet = new WrapperPlayServerTeams(identifier, WrapperPlayServerTeams.TeamMode.CREATE, info, entries);
-        PacketEvents.getAPI().getPlayerManager().sendPacket(((PlayerHandlePaper) player).handle(), packet);
+        PacketEvents.getAPI().getPlayerManager().sendPacket(player.handle(), packet);
     }
 
     public static void removeTeamVisibleToPlayer(PlayerHandle player, String identifier) {
         PacketWrapper<WrapperPlayServerTeams> packet = new WrapperPlayServerTeams(identifier, WrapperPlayServerTeams.TeamMode.REMOVE, (WrapperPlayServerTeams.ScoreBoardTeamInfo)null);
-        PacketEvents.getAPI().getPlayerManager().sendPacket(((PlayerHandlePaper) player).handle(), packet);
+        PacketEvents.getAPI().getPlayerManager().sendPacket(player.handle(), packet);
     }
 }

@@ -1,8 +1,8 @@
 package top.chancelethay.bingo.tasks.data;
 
-import top.chancelethay.bingo.lib.api.AdvancementHandle;
-import top.chancelethay.bingo.lib.api.StatisticHandle;
-import top.chancelethay.bingo.lib.api.item.ItemType;
+import top.chancelethay.bingo.lib.platform.AdvancementHandle;
+import top.chancelethay.bingo.lib.platform.StatisticHandle;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
 import top.chancelethay.bingo.lib.data.core.DataStorage;
 import top.chancelethay.bingo.lib.data.core.DataStorageSerializer;
 import top.chancelethay.bingo.lib.data.core.tag.TagDataType;

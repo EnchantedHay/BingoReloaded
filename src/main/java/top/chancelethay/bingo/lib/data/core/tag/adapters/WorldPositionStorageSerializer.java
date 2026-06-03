@@ -1,8 +1,8 @@
 package top.chancelethay.bingo.lib.data.core.tag.adapters;
 
-import top.chancelethay.bingo.lib.api.PlatformResolver;
-import top.chancelethay.bingo.lib.api.WorldHandle;
-import top.chancelethay.bingo.lib.api.WorldPosition;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.WorldHandle;
+import top.chancelethay.bingo.lib.platform.WorldPosition;
 import top.chancelethay.bingo.lib.data.core.DataStorage;
 import top.chancelethay.bingo.lib.data.core.DataStorageSerializer;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +27,7 @@ public class WorldPositionStorageSerializer implements DataStorageSerializer<Wor
         if (id == null) {
             return null;
         }
-        WorldHandle world = PlatformResolver.get().getWorld(id);
+        WorldHandle world = ServerSoftware.get().getWorld(id);
         if (world == null) {
             return null;
         }

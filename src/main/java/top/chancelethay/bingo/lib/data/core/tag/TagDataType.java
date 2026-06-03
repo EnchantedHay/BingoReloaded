@@ -1,6 +1,6 @@
 package top.chancelethay.bingo.lib.data.core.tag;
 
-import top.chancelethay.bingo.lib.api.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
 import top.chancelethay.bingo.lib.data.core.tag.adapters.BooleanTagAdapter;
 import top.chancelethay.bingo.lib.data.core.tag.adapters.ItemStackTagAdapter;
 import top.chancelethay.bingo.lib.data.core.tag.adapters.UUIDTagAdapter;

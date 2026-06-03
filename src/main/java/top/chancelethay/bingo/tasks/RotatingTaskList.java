@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.tasks;
 
 import top.chancelethay.bingo.data.BingoCardData;
-import top.chancelethay.bingo.lib.api.item.ItemType;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
 import top.chancelethay.bingo.tasks.data.TaskData;
 
 import java.util.ArrayList;

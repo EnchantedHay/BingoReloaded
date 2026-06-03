@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import top.chancelethay.bingo.lib.api.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
 import top.chancelethay.bingo.lib.data.core.DataAccessor;
 import top.chancelethay.bingo.lib.data.core.tag.Tag;
 import top.chancelethay.bingo.lib.data.core.tag.TagDataType;

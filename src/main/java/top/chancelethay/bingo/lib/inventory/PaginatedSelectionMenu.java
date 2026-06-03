@@ -1,8 +1,8 @@
 package top.chancelethay.bingo.lib.inventory;
 
-import top.chancelethay.bingo.lib.api.MenuBoard;
-import top.chancelethay.bingo.lib.api.item.ItemTypePaper;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.data.core.DataStorage;
 import top.chancelethay.bingo.lib.item.ItemTemplate;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
@@ -54,19 +54,19 @@ public abstract class PaginatedSelectionMenu extends BasicMenu {
 	private final ItemTemplate nextPageItem;
 	private final ItemTemplate previousPageItem;
 
-	protected static final ItemTemplate NEXT = new ItemTemplate(8, 5, ItemTypePaper.of(Material.STRUCTURE_VOID),
+	protected static final ItemTemplate NEXT = new ItemTemplate(8, 5, ItemType.of(Material.STRUCTURE_VOID),
 			PlayerDisplayTranslationKey.MENU_NEXT.translate()
 					.color(NamedTextColor.LIGHT_PURPLE).decorate(TextDecoration.BOLD));
 
-	protected static final ItemTemplate PREVIOUS = new ItemTemplate(0, 5, ItemTypePaper.of(Material.BARRIER),
+	protected static final ItemTemplate PREVIOUS = new ItemTemplate(0, 5, ItemType.of(Material.BARRIER),
 			PlayerDisplayTranslationKey.MENU_PREVIOUS.translate()
 					.color(NamedTextColor.LIGHT_PURPLE).decorate(TextDecoration.BOLD));
 
-	protected static final ItemTemplate CLOSE = new ItemTemplate(4, 5, ItemTypePaper.of(Material.REDSTONE),
+	protected static final ItemTemplate CLOSE = new ItemTemplate(4, 5, ItemType.of(Material.REDSTONE),
 			PlayerDisplayTranslationKey.MENU_SAVE_EXIT.translate()
 					.color(NamedTextColor.RED).decorate(TextDecoration.BOLD));
 
-	protected static final ItemTemplate FILTER = new ItemTemplate(1, 5, ItemTypePaper.of(Material.HOPPER),
+	protected static final ItemTemplate FILTER = new ItemTemplate(1, 5, ItemType.of(Material.HOPPER),
 			PlayerDisplayTranslationKey.MENU_FILTER.translate()
 					.color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
 

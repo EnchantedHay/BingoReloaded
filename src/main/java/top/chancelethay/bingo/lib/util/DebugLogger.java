@@ -1,6 +1,6 @@
 package top.chancelethay.bingo.lib.util;
 
-import top.chancelethay.bingo.lib.api.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
 
 import java.io.File;
 

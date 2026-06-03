@@ -1,6 +1,6 @@
 package top.chancelethay.bingo.data;
 
-import top.chancelethay.bingo.lib.api.WorldPosition;
+import top.chancelethay.bingo.lib.platform.WorldPosition;
 
 public record BingoLobby(WorldPosition spawnPosition) {
 

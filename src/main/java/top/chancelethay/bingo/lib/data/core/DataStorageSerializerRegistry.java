@@ -1,6 +1,6 @@
 package top.chancelethay.bingo.lib.data.core;
 
-import top.chancelethay.bingo.lib.api.WorldPosition;
+import top.chancelethay.bingo.lib.platform.WorldPosition;
 import top.chancelethay.bingo.lib.data.core.tag.adapters.WorldPositionStorageSerializer;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
 import org.jetbrains.annotations.Nullable;

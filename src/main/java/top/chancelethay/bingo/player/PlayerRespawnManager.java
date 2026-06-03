@@ -1,8 +1,8 @@
 package top.chancelethay.bingo.player;
 
 import top.chancelethay.bingo.BingoReloaded;
-import top.chancelethay.bingo.lib.api.ServerSoftware;
-import top.chancelethay.bingo.lib.api.WorldPosition;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.WorldPosition;
 
 import java.util.HashMap;
 import java.util.HashSet;

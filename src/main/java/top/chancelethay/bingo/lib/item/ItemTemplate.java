@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.lib.item;
 
-import top.chancelethay.bingo.lib.api.item.ItemType;
-import top.chancelethay.bingo.lib.api.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
 import top.chancelethay.bingo.lib.data.core.tag.TagDataStorage;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;

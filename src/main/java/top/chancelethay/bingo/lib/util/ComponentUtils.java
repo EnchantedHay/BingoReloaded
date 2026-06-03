@@ -1,9 +1,9 @@
 package top.chancelethay.bingo.lib.util;
 
-import top.chancelethay.bingo.lib.api.AdvancementHandle;
-import top.chancelethay.bingo.lib.api.EntityType;
-import top.chancelethay.bingo.lib.api.StatisticHandle;
-import top.chancelethay.bingo.lib.api.item.ItemType;
+import top.chancelethay.bingo.lib.platform.AdvancementHandle;
+import top.chancelethay.bingo.lib.platform.EntityType;
+import top.chancelethay.bingo.lib.platform.StatisticHandle;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;

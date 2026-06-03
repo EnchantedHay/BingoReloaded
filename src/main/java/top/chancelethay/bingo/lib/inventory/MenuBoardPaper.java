@@ -1,10 +1,9 @@
 package top.chancelethay.bingo.lib.inventory;
 
 
-import top.chancelethay.bingo.lib.api.MenuBoard;
-import top.chancelethay.bingo.lib.api.ServerSoftware;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
-import top.chancelethay.bingo.lib.api.player.PlayerHandlePaper;
+import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.data.core.DataStorage;
 import top.chancelethay.bingo.lib.data.core.tag.TagDataStorage;
 import top.chancelethay.bingo.lib.events.PlayerDisplayAnvilTextChangedEvent;
@@ -133,7 +132,7 @@ public class MenuBoardPaper implements MenuBoard, Listener
             return;
 
         boolean cancel = menu.onClick(event,
-                new PlayerHandlePaper((Player)event.getWhoClicked()),
+                new PlayerHandle((Player)event.getWhoClicked()),
                 event.getRawSlot(),
                 event.getClick());
         event.setCancelled(cancel);
@@ -162,14 +161,14 @@ public class MenuBoardPaper implements MenuBoard, Listener
 
         Menu topMenu = activeMenus.get(playerId).peek();
         if (topMenu instanceof InventoryMenu invMenu && invMenu.getInventory() == event.getInventory()) {
-            close(topMenu, new PlayerHandlePaper((Player) event.getPlayer()));
+            close(topMenu, new PlayerHandle((Player) event.getPlayer()));
         }
     }
 
     @EventHandler
     public void handlePlayerQuit(final PlayerQuitEvent event) {
         if (activeMenus.containsKey(event.getPlayer().getUniqueId())) {
-            closeAll(new PlayerHandlePaper(event.getPlayer()));
+            closeAll(new PlayerHandle(event.getPlayer()));
         }
     }
 

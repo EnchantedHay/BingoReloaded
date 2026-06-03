@@ -5,7 +5,7 @@ import top.chancelethay.bingo.data.BingoCardData;
 import top.chancelethay.bingo.data.TaskListData;
 import top.chancelethay.bingo.data.config.BingoOptions;
 import top.chancelethay.bingo.gameloop.phase.BingoGame;
-import top.chancelethay.bingo.lib.api.item.ItemType;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
 import top.chancelethay.bingo.settings.BingoSettings;
 import top.chancelethay.bingo.tasks.data.ItemTask;

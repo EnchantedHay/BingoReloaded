@@ -1,16 +1,12 @@
 package top.chancelethay.bingo.lib.events;
 
-import top.chancelethay.bingo.lib.api.AdvancementHandlePaper;
-import top.chancelethay.bingo.lib.api.InteractAction;
-import top.chancelethay.bingo.lib.api.PaperApiHelper;
-import top.chancelethay.bingo.lib.api.StatisticHandlePaper;
-import top.chancelethay.bingo.lib.api.item.ItemTypePaper;
-import top.chancelethay.bingo.lib.api.item.StackHandle;
-import top.chancelethay.bingo.lib.api.item.StackHandlePaper;
-import top.chancelethay.bingo.lib.api.player.PlayerHandlePaper;
-import top.chancelethay.bingo.lib.event.EventResult;
-import top.chancelethay.bingo.lib.event.EventResults;
-import top.chancelethay.bingo.lib.event.PlatformEventDispatcher;
+import top.chancelethay.bingo.lib.platform.AdvancementHandle;
+import top.chancelethay.bingo.lib.platform.InteractAction;
+import top.chancelethay.bingo.lib.platform.PaperApiHelper;
+import top.chancelethay.bingo.lib.platform.StatisticHandle;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -54,7 +50,7 @@ public class EventListenerPaper implements Listener {
 
 	@EventHandler
 	public void handlePlayerMoveEvent(final PlayerMoveEvent event) {
-		EventResult<?> result = dispatcher.sendPlayerMove(new PlayerHandlePaper(event.getPlayer()),
+		EventResult<?> result = dispatcher.sendPlayerMove(new PlayerHandle(event.getPlayer()),
 				PaperApiHelper.worldPosFromLocation(event.getFrom()),
 				PaperApiHelper.worldPosFromLocation(event.getTo()));
 
@@ -70,15 +66,15 @@ public class EventListenerPaper implements Listener {
 	@EventHandler
 	public void handlePlayerDeathEvent(final PlayerDeathEvent event) {
 		List<? extends StackHandle> drops = event.getDrops().stream()
-				.map(StackHandlePaper::new)
+				.map(StackHandle::new)
 				.toList();
-		EventResult<EventResults.PlayerDeathResult> result = dispatcher.sendPlayerDeath(new PlayerHandlePaper(event.getPlayer()), drops);
+		EventResult<EventResults.PlayerDeathResult> result = dispatcher.sendPlayerDeath(new PlayerHandle(event.getPlayer()), drops);
 
 		event.getDrops().clear();
 
 		if (result.data() == null || !result.data().keepInventory()) {
 			event.getDrops().addAll(drops.stream()
-					.map(s -> ((StackHandlePaper) s).handle())
+					.map(s -> s.handle())
 					.toList());
 		} else {
 			event.setKeepInventory(true);
@@ -90,7 +86,7 @@ public class EventListenerPaper implements Listener {
 	@EventHandler
 	public void handlePlayerRespawnEvent(final PlayerRespawnEvent event) {
 		EventResult<EventResults.PlayerRespawnResult> result = dispatcher.sendPlayerRespawn(
-				new PlayerHandlePaper(event.getPlayer()),
+				new PlayerHandle(event.getPlayer()),
 				event.isBedSpawn(),
 				event.isAnchorSpawn());
 
@@ -108,7 +104,7 @@ public class EventListenerPaper implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void handlePlayerTeleportEvent(final PlayerTeleportEvent event) {
 		EventResult<?> result = dispatcher.sendPlayerTeleport(
-				new PlayerHandlePaper(event.getPlayer()),
+				new PlayerHandle(event.getPlayer()),
 				PaperApiHelper.worldPosFromLocation(event.getFrom()),
 				PaperApiHelper.worldPosFromLocation(event.getTo()));
 
@@ -120,7 +116,7 @@ public class EventListenerPaper implements Listener {
 	@EventHandler
 	public void handlePlayerPortalEvent(final PlayerPortalEvent event) {
 		EventResult<EventResults.PlayerMoveResult> result = dispatcher.sendPlayerPortal(
-				new PlayerHandlePaper(event.getPlayer()),
+				new PlayerHandle(event.getPlayer()),
 				PaperApiHelper.worldPosFromLocation(event.getFrom()),
 				PaperApiHelper.worldPosFromLocation(event.getTo()));
 
@@ -142,8 +138,8 @@ public class EventListenerPaper implements Listener {
 	@EventHandler
 	public void handlePlayerDroppedStackEvent(final PlayerDropItemEvent event) {
 		EventResult<?> result = dispatcher.sendPlayerDroppedStack(
-				new PlayerHandlePaper(event.getPlayer()),
-				new StackHandlePaper(event.getItemDrop().getItemStack()));
+				new PlayerHandle(event.getPlayer()),
+				new StackHandle(event.getItemDrop().getItemStack()));
 
 		if (result.consume()) {
 			event.setCancelled(true);
@@ -153,8 +149,8 @@ public class EventListenerPaper implements Listener {
 	@EventHandler
 	public void handlePlayerItemDamaged(final PlayerItemDamageEvent event) {
 		EventResult<?> result = dispatcher.sendPlayerStackDamaged(
-				new PlayerHandlePaper(event.getPlayer()),
-				new StackHandlePaper(event.getItem()));
+				new PlayerHandle(event.getPlayer()),
+				new StackHandle(event.getItem()));
 
 		if (result.consume()) {
 			event.setCancelled(true);
@@ -169,8 +165,8 @@ public class EventListenerPaper implements Listener {
 		}
 
 		EventResult<?> result = dispatcher.sendPlayerInteracted(
-				new PlayerHandlePaper(event.getPlayer()),
-				new StackHandlePaper(event.getItem()),
+				new PlayerHandle(event.getPlayer()),
+				new StackHandle(event.getItem()),
 				new InteractAction(event.getAction().isLeftClick(), event.getAction().isRightClick(), event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR));
 
 		if (result.consume()) {
@@ -188,7 +184,7 @@ public class EventListenerPaper implements Listener {
 			return;
 		}
 
-		EventResult<?> result = dispatcher.sendPlayerFallDamage(new PlayerHandlePaper(player));
+		EventResult<?> result = dispatcher.sendPlayerFallDamage(new PlayerHandle(player));
 
 		if (result.consume()) {
 			event.setCancelled(true);
@@ -197,20 +193,20 @@ public class EventListenerPaper implements Listener {
 
 	@EventHandler
 	public void handlePlayerJoinEvent(final PlayerJoinEvent event) {
-		dispatcher.sendPlayerJoinsServer(new PlayerHandlePaper(event.getPlayer()));
+		dispatcher.sendPlayerJoinsServer(new PlayerHandle(event.getPlayer()));
 	}
 
 	@EventHandler
 	public void handlePlayerQuitEvent(final PlayerQuitEvent event) {
-		dispatcher.sendPlayerQuitsServer(new PlayerHandlePaper(event.getPlayer()));
+		dispatcher.sendPlayerQuitsServer(new PlayerHandle(event.getPlayer()));
 	}
 
 	@EventHandler
 	public void handlePlayerBreakBlockEvent(final BlockBreakEvent event) {
 		EventResult<?> result = dispatcher.sendPlayerBreaksBlock(
-				new PlayerHandlePaper(event.getPlayer()),
+				new PlayerHandle(event.getPlayer()),
 				PaperApiHelper.worldPosFromLocation(event.getBlock().getLocation()),
-				ItemTypePaper.of(event.getBlock().getType()));
+				ItemType.of(event.getBlock().getType()));
 
 		if (result.consume()) {
 			event.setCancelled(true);
@@ -220,9 +216,9 @@ public class EventListenerPaper implements Listener {
 	@EventHandler
 	public void handlePlayerPlaceBlockEvent(final BlockPlaceEvent event) {
 		EventResult<?> result = dispatcher.sendPlayerPlacesBlock(
-				new PlayerHandlePaper(event.getPlayer()),
+				new PlayerHandle(event.getPlayer()),
 				PaperApiHelper.worldPosFromLocation(event.getBlock().getLocation()),
-				ItemTypePaper.of(event.getBlock().getType()));
+				ItemType.of(event.getBlock().getType()));
 
 		if (result.consume()) {
 			event.setCancelled(true);
@@ -232,8 +228,8 @@ public class EventListenerPaper implements Listener {
 	@EventHandler
 	public void handlePlayerStatisticIncrementEvent(final PlayerStatisticIncrementEvent event) {
 		EventResult<?> result = dispatcher.sendPlayerStatisticIncrement(
-				new PlayerHandlePaper(event.getPlayer()),
-				StatisticHandlePaper.create(event.getStatistic(), event.getEntityType(), event.getMaterial()),
+				new PlayerHandle(event.getPlayer()),
+				StatisticHandle.create(event.getStatistic(), event.getEntityType(), event.getMaterial()),
 				event.getNewValue());
 
 		if (result.consume()) {
@@ -244,8 +240,8 @@ public class EventListenerPaper implements Listener {
 	@EventHandler
 	public void handlePlayerAdvancementEvent(final PlayerAdvancementDoneEvent event) {
 		dispatcher.sendPlayerAdvancementDone(
-				new PlayerHandlePaper(event.getPlayer()),
-				new AdvancementHandlePaper(event.getAdvancement()));
+				new PlayerHandle(event.getPlayer()),
+				new AdvancementHandle(event.getAdvancement()));
 	}
 
 	@EventHandler
@@ -255,8 +251,8 @@ public class EventListenerPaper implements Listener {
 		}
 
 		EventResult<EventResults.PlayerPickupResult> result = dispatcher.sendPlayerPickupStack(
-				new PlayerHandlePaper(player),
-				new StackHandlePaper(event.getItem().getItemStack()),
+				new PlayerHandle(player),
+				new StackHandle(event.getItem().getItemStack()),
 				PaperApiHelper.worldPosFromLocation(event.getItem().getLocation()));
 
 		if (result.consume()) {
@@ -273,7 +269,7 @@ public class EventListenerPaper implements Listener {
 		}
 
 		if (result.data().overwriteItem() && result.data().newItem() != null) {
-			event.getItem().setItemStack(((StackHandlePaper)result.data().newItem()).handle());
+			event.getItem().setItemStack(result.data().newItem().handle());
 		}
 	}
 
@@ -284,8 +280,8 @@ public class EventListenerPaper implements Listener {
 		}
 
 		EventResult<?> result = dispatcher.sendPlayerInventoryClick(
-				new PlayerHandlePaper(player),
-				new StackHandlePaper(event.getWhoClicked().getItemOnCursor()),
+				new PlayerHandle(player),
+				new StackHandle(event.getWhoClicked().getItemOnCursor()),
 				event.getSlotType() == InventoryType.SlotType.RESULT,
 				event.isShiftClick());
 

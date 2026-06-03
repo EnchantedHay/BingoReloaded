@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.lib.inventory.group;
 
-import top.chancelethay.bingo.lib.api.PlatformResolver;
-import top.chancelethay.bingo.lib.api.item.ItemTypePaper;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
 import top.chancelethay.bingo.lib.inventory.BasicMenu;
 import top.chancelethay.bingo.lib.item.ItemTemplate;
 import top.chancelethay.bingo.lib.util.PlayerDisplayTranslationKey;
@@ -15,11 +15,11 @@ import java.util.List;
 
 public class ScrollableItemBar<Data> extends ItemGroup {
 
-	private static final ItemTemplate NEXT = new ItemTemplate(ItemTypePaper.of(Material.STRUCTURE_VOID),
+	private static final ItemTemplate NEXT = new ItemTemplate(ItemType.of(Material.STRUCTURE_VOID),
 			PlayerDisplayTranslationKey.MENU_NEXT.translate()
 					.color(NamedTextColor.LIGHT_PURPLE).decorate(TextDecoration.BOLD));
 
-	private static final ItemTemplate PREVIOUS = new ItemTemplate(ItemTypePaper.of(Material.BARRIER),
+	private static final ItemTemplate PREVIOUS = new ItemTemplate(ItemType.of(Material.BARRIER),
 			PlayerDisplayTranslationKey.MENU_PREVIOUS.translate()
 					.color(NamedTextColor.LIGHT_PURPLE).decorate(TextDecoration.BOLD));
 
@@ -102,7 +102,7 @@ public class ScrollableItemBar<Data> extends ItemGroup {
 		if (editedItem != null) {
 			items.set(itemIdx, editedItem);
 		}
-		PlatformResolver.get().runTask(t -> {
+		ServerSoftware.get().runTask(t -> {
 			updateVisibleItems(menu);
 		});
 	}

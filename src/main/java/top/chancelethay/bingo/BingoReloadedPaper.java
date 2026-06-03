@@ -15,47 +15,41 @@ import top.chancelethay.bingo.api.CardMenu;
 import top.chancelethay.bingo.api.TeamDisplay;
 import top.chancelethay.bingo.api.TeamDisplayPaper;
 import top.chancelethay.bingo.data.BingoMessage;
-import top.chancelethay.bingo.data.DataUpdaterV3_5_0;
+import top.chancelethay.bingo.data.updater.DataUpdaterV3_5_0;
 import top.chancelethay.bingo.data.config.BingoConfigurationData;
 import top.chancelethay.bingo.data.config.BingoOptions;
 import top.chancelethay.bingo.data.record.GameRecordData;
 import top.chancelethay.bingo.gameloop.BingoSession;
 import top.chancelethay.bingo.gameloop.phase.PregameLobby;
 import top.chancelethay.bingo.gui.BingoCardMapRenderer;
-import top.chancelethay.bingo.gui.inventory.AdminBingoMenu;
-import top.chancelethay.bingo.gui.inventory.GameHistoryMenu;
-import top.chancelethay.bingo.gui.inventory.TeamCardSelectMenu;
-import top.chancelethay.bingo.gui.inventory.TeamEditorMenu;
-import top.chancelethay.bingo.gui.inventory.TeamSelectionMenu;
-import top.chancelethay.bingo.gui.inventory.VoteMenu;
-import top.chancelethay.bingo.gui.inventory.card.GenericCardMenu;
-import top.chancelethay.bingo.gui.inventory.card.HotswapGenericCardMenu;
-import top.chancelethay.bingo.gui.inventory.card.HotswapTexturedCardMenu;
-import top.chancelethay.bingo.gui.inventory.card.TexturedCardMenu;
-import top.chancelethay.bingo.gui.inventory.creator.BingoCreatorMenu;
+import top.chancelethay.bingo.gui.AdminBingoMenu;
+import top.chancelethay.bingo.gui.GameHistoryMenu;
+import top.chancelethay.bingo.gui.TeamCardSelectMenu;
+import top.chancelethay.bingo.gui.TeamEditorMenu;
+import top.chancelethay.bingo.gui.TeamSelectionMenu;
+import top.chancelethay.bingo.gui.VoteMenu;
+import top.chancelethay.bingo.gui.card.GenericCardMenu;
+import top.chancelethay.bingo.gui.card.HotswapGenericCardMenu;
+import top.chancelethay.bingo.gui.card.HotswapTexturedCardMenu;
+import top.chancelethay.bingo.gui.card.TexturedCardMenu;
+import top.chancelethay.bingo.gui.creator.BingoCreatorMenu;
 import top.chancelethay.bingo.lib.action.ActionTree;
-import top.chancelethay.bingo.lib.api.BingoReloadedRuntime;
-import top.chancelethay.bingo.lib.api.EntityType;
-import top.chancelethay.bingo.lib.api.EntityTypePaper;
-import top.chancelethay.bingo.lib.api.MenuBoard;
-import top.chancelethay.bingo.lib.api.PaperServerSoftware;
-import top.chancelethay.bingo.lib.api.PlatformResolver;
-import top.chancelethay.bingo.lib.api.ServerSoftware;
-import top.chancelethay.bingo.lib.api.WorldHandle;
-import top.chancelethay.bingo.lib.api.WorldHandlePaper;
-import top.chancelethay.bingo.lib.api.item.StackHandle;
-import top.chancelethay.bingo.lib.api.item.StackHandlePaper;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
-import top.chancelethay.bingo.lib.api.player.PlayerHandlePaper;
-import top.chancelethay.bingo.lib.api.player.SharedDisplay;
+import top.chancelethay.bingo.lib.platform.BingoReloadedRuntime;
+import top.chancelethay.bingo.lib.platform.EntityType;
+import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.WorldHandle;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.player.SharedDisplay;
 import top.chancelethay.bingo.lib.data.core.ConfigDataAccessor;
 import top.chancelethay.bingo.lib.data.core.DataAccessor;
 import top.chancelethay.bingo.lib.data.core.YamlDataAccessor;
 import top.chancelethay.bingo.lib.events.EventListenerPaper;
 import top.chancelethay.bingo.lib.inventory.BasicMenu;
 import top.chancelethay.bingo.lib.inventory.MenuBoardPaper;
-import top.chancelethay.bingo.lib.menu.EmptyDisplay;
-import top.chancelethay.bingo.lib.menu.ScoreboardDisplay;
+import top.chancelethay.bingo.lib.display.EmptyDisplay;
+import top.chancelethay.bingo.lib.display.ScoreboardDisplay;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
 import top.chancelethay.bingo.lib.util.PlayerDisplayTranslationKey;
 import top.chancelethay.bingo.placeholder.BingoReloadedPlaceholderExpansion;
@@ -64,6 +58,8 @@ import top.chancelethay.bingo.settings.PlayerKit;
 import top.chancelethay.bingo.settings.gamemode.BingoGamemodes;
 import top.chancelethay.bingo.util.bstats.Metrics;
 import top.chancelethay.bingo.world.CustomWorldCreator;
+import top.chancelethay.bingo.world.LobbyProtectionListener;
+import top.chancelethay.bingo.world.PortalLinkListener;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.key.Key;
 import org.bukkit.Bukkit;
@@ -89,7 +85,7 @@ import java.util.Set;
 
 public class BingoReloadedPaper extends JavaPlugin implements BingoReloadedRuntime {
 
-	private PaperServerSoftware platform;
+	private ServerSoftware platform;
 	private BingoReloaded bingo;
 	private MenuBoard menuBoard;
 	private EventListenerPaper eventListener;
@@ -101,8 +97,8 @@ public class BingoReloadedPaper extends JavaPlugin implements BingoReloadedRunti
 
 	@Override
 	public void onLoad() {
-		this.platform = new PaperServerSoftware(this);
-		PlatformResolver.set(new PaperServerSoftware(this));
+		this.platform = new ServerSoftware(this);
+		ServerSoftware.set(platform);
 
 		PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
 		PacketEvents.getAPI().getSettings().reEncodeByDefault(false)
@@ -138,11 +134,18 @@ public class BingoReloadedPaper extends JavaPlugin implements BingoReloadedRunti
 				if (player == null) {
 					return message;
 				}
-				return PlaceholderAPI.setPlaceholders(((PlayerHandlePaper)player).handle(), message);
+				return PlaceholderAPI.setPlaceholders(player.handle(), message);
 			});
 		}
 
 		eventListener = new EventListenerPaper(this, bingo.getGameManager().eventListener());
+
+		// Lobby world protection (calm "waiting area" rules) for the persistent lobby world.
+		new LobbyProtectionListener(this, bingo.config()).enable();
+
+		// Redirect non-player entities through portals into the session's custom dimensions
+		// (players are already handled by BingoSession#handlePlayerPortalEvent).
+		new PortalLinkListener(this, bingo).enable();
 
 //		menuBoard.setPlayerOpenPredicate(player -> player instanceof PlayerHandle handle && this.gameManager.canPlayerOpenMenus(handle));
 
@@ -221,7 +224,7 @@ public class BingoReloadedPaper extends JavaPlugin implements BingoReloadedRunti
 		Arrays.stream(Material.values())
 				.forEach(mat -> {
 					if (mat.name().contains("_SPAWN_EGG")) {
-						types.add(new EntityTypePaper(org.bukkit.entity.EntityType.valueOf(mat.name().replace("_SPAWN_EGG", ""))));
+						types.add(new EntityType(org.bukkit.entity.EntityType.valueOf(mat.name().replace("_SPAWN_EGG", ""))));
 					}
 				});
 		return types;
@@ -287,12 +290,12 @@ public class BingoReloadedPaper extends JavaPlugin implements BingoReloadedRunti
 			return PlayerKit.CARD_ITEM.buildItem();
 		}
 
-		StackHandlePaper mapStack = (StackHandlePaper) PlayerKit.CARD_ITEM_RENDERABLE.buildItem();
+		StackHandle mapStack = PlayerKit.CARD_ITEM_RENDERABLE.buildItem();
 
 		ItemStack handle = mapStack.handle();
 		handle.editMeta(m -> {
 			if (m instanceof MapMeta meta) {
-				MapView view = Bukkit.createMap(((WorldHandlePaper) playerHandle.world()).handle());
+				MapView view = Bukkit.createMap(playerHandle.world().handle());
 				for (var renderer : new ArrayList<>(view.getRenderers())) {
 					view.removeRenderer(renderer);
 				}
@@ -394,7 +397,7 @@ public class BingoReloadedPaper extends JavaPlugin implements BingoReloadedRunti
 
 	public static void showPacketDialog(PlayerHandle player, Dialog dialog) {
 		WrapperPlayServerShowDialog dialogWrapper = new WrapperPlayServerShowDialog(dialog);
-		PacketEvents.getAPI().getPlayerManager().sendPacket(((PlayerHandlePaper) player).handle(), dialogWrapper);
+		PacketEvents.getAPI().getPlayerManager().sendPacket(player.handle(), dialogWrapper);
 	}
 
 }

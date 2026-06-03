@@ -2,7 +2,7 @@ package top.chancelethay.bingo.tasks.data;
 
 import top.chancelethay.bingo.api.CardDisplayInfo;
 import top.chancelethay.bingo.data.BingoMessage;
-import top.chancelethay.bingo.lib.api.item.ItemType;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
 import top.chancelethay.bingo.lib.util.ComponentUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

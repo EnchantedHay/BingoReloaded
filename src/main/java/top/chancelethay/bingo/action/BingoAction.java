@@ -14,11 +14,10 @@ import top.chancelethay.bingo.gameloop.phase.PregameLobby;
 import top.chancelethay.bingo.item.GoUpWand;
 import top.chancelethay.bingo.lib.action.ActionResult;
 import top.chancelethay.bingo.lib.action.ActionTree;
-import top.chancelethay.bingo.lib.api.ActionUser;
-import top.chancelethay.bingo.lib.api.PlatformResolver;
-import top.chancelethay.bingo.lib.api.ServerSoftware;
-import top.chancelethay.bingo.lib.api.WorldPosition;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.ActionUser;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.WorldPosition;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.util.ComponentUtils;
 import top.chancelethay.bingo.player.BingoParticipant;
 import top.chancelethay.bingo.player.BingoPlayer;
@@ -148,7 +147,7 @@ public class BingoAction extends ActionTree {
 
 
 		this.addSessionSubAction("about", List.of(), (args, session) -> {
-			ServerSoftware server = PlatformResolver.get();
+			ServerSoftware server = ServerSoftware.get();
 			getLastUser().sendMessage(Component.text("\nBingo Reloaded Version: " + server.getExtensionInfo().version() +
 					" Created by: " + server.getExtensionInfo().authors()));
 			getLastUser().sendMessage(BingoMessage.createInfoUrlComponent(Component.text("\nJoin the bingo reloaded discord server here to stay up to date!"), "https://discord.gg/AzZNxPRNPf"));

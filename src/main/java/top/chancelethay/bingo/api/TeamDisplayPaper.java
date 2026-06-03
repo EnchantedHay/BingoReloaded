@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.api;
 
 import top.chancelethay.bingo.gameloop.BingoSession;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.player.team.BingoTeam;
 import top.chancelethay.bingo.player.team.TeamManager;
 import net.kyori.adventure.text.Component;

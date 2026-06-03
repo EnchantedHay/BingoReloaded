@@ -1,8 +1,8 @@
 package top.chancelethay.bingo.data.world;
 
-import top.chancelethay.bingo.lib.api.ServerSoftware;
-import top.chancelethay.bingo.lib.api.WorldHandle;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.WorldHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;

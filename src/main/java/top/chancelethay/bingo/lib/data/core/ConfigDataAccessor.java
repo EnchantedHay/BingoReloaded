@@ -1,15 +1,15 @@
 package top.chancelethay.bingo.lib.data.core;
 
-import top.chancelethay.bingo.lib.api.PaperServerSoftware;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
 
 /**
  * Specific yaml data accessor for the config.yml file provided by Bukkit.
  */
 public class ConfigDataAccessor extends YamlDataStorage implements DataAccessor
 {
-    private final PaperServerSoftware platform;
+    private final ServerSoftware platform;
 
-    public ConfigDataAccessor(PaperServerSoftware platform) {
+    public ConfigDataAccessor(ServerSoftware platform) {
         super(platform.getConfig());
         this.platform = platform;
     }

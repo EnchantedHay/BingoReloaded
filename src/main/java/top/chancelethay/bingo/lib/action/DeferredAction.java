@@ -1,6 +1,6 @@
 package top.chancelethay.bingo.lib.action;
 
-import top.chancelethay.bingo.lib.api.ActionUser;
+import top.chancelethay.bingo.lib.platform.ActionUser;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
 
 import java.util.Arrays;

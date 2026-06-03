@@ -1,9 +1,8 @@
 package top.chancelethay.bingo.lib.data.core;
 
-import top.chancelethay.bingo.lib.api.PaperApiHelper;
-import top.chancelethay.bingo.lib.api.WorldPosition;
-import top.chancelethay.bingo.lib.api.item.StackHandle;
-import top.chancelethay.bingo.lib.api.item.StackHandlePaper;
+import top.chancelethay.bingo.lib.platform.PaperApiHelper;
+import top.chancelethay.bingo.lib.platform.WorldPosition;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
 import top.chancelethay.bingo.lib.data.core.tag.TagAdapter;
 import top.chancelethay.bingo.lib.data.core.tag.TagDataType;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
@@ -205,7 +204,7 @@ public class YamlDataStorage implements DataStorage
 
     @Override
     public @NotNull StackHandle getItemStack(String path) {
-        return new StackHandlePaper(config.getItemStack(path, new ItemStack(Material.AIR)));
+        return new StackHandle(config.getItemStack(path, new ItemStack(Material.AIR)));
     }
 
     @Override

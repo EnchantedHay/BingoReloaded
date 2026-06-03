@@ -1,8 +1,8 @@
 package top.chancelethay.bingo.api;
 
 import top.chancelethay.bingo.gameloop.BingoSession;
-import top.chancelethay.bingo.lib.api.StatisticHandle;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.StatisticHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.player.BingoParticipant;
 import top.chancelethay.bingo.player.team.BingoTeam;
 import top.chancelethay.bingo.settings.BingoSettings;

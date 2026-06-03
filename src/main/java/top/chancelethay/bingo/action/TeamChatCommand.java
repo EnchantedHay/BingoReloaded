@@ -4,8 +4,7 @@ import top.chancelethay.bingo.data.BingoMessage;
 import top.chancelethay.bingo.gameloop.BingoSession;
 import top.chancelethay.bingo.lib.action.ActionResult;
 import top.chancelethay.bingo.lib.action.ActionTree;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
-import top.chancelethay.bingo.lib.api.player.PlayerHandlePaper;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.player.BingoParticipant;
 import top.chancelethay.bingo.player.BingoPlayer;
 import top.chancelethay.bingo.player.team.BingoTeam;
@@ -69,7 +68,7 @@ public class TeamChatCommand extends ActionTree implements Listener {
 
 	@EventHandler
 	public void onPlayerSendMessage(final AsyncChatEvent event) {
-		PlayerHandle handle = new PlayerHandlePaper(event.getPlayer());
+		PlayerHandle handle = new PlayerHandle(event.getPlayer());
 		BingoSession session = getSession(handle);
 		if (session == null)
 			return;

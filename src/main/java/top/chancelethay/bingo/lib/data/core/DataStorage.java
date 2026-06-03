@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.lib.data.core;
 
-import top.chancelethay.bingo.lib.api.WorldPosition;
-import top.chancelethay.bingo.lib.api.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.WorldPosition;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
 import top.chancelethay.bingo.lib.data.core.tag.TagAdapter;
 import top.chancelethay.bingo.lib.data.core.tag.TagDataType;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;

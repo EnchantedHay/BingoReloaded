@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.util.timer;
 
-import top.chancelethay.bingo.lib.api.ExtensionTask;
-import top.chancelethay.bingo.lib.api.PlatformResolver;
+import top.chancelethay.bingo.lib.platform.ExtensionTask;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +33,7 @@ public abstract class GameTimer
     public void start()
     {
         stop();
-        this.task = PlatformResolver.get().runTaskTimer(getUpdateInterval(), getStartDelay(), (task) -> {
+        this.task = ServerSoftware.get().runTaskTimer(getUpdateInterval(), getStartDelay(), (task) -> {
             intervals++;
             updateTime(time + getStep());
         });

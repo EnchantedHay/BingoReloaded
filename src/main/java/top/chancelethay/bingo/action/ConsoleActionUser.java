@@ -1,6 +1,6 @@
 package top.chancelethay.bingo.action;
 
-import top.chancelethay.bingo.lib.api.ActionUser;
+import top.chancelethay.bingo.lib.platform.ActionUser;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;

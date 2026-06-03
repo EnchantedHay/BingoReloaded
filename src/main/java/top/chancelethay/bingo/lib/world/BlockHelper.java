@@ -1,8 +1,8 @@
 package top.chancelethay.bingo.lib.world;
 
-import top.chancelethay.bingo.lib.api.Position;
-import top.chancelethay.bingo.lib.api.WorldPosition;
-import top.chancelethay.bingo.lib.api.item.ItemType;
+import top.chancelethay.bingo.lib.platform.Position;
+import top.chancelethay.bingo.lib.platform.WorldPosition;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

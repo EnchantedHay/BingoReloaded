@@ -58,6 +58,14 @@ public class BingoOptions {
 	public static final ConfigurationOption<Integer> TELEPORT_TO_LOBBY_SPREAD = new IntegerOption("teleportToLobbyAfterGame.spread");
 	public static final ConfigurationOption<BingoConfigurationData.VoteList> VOTE_LIST = new NonSerializableOption<>("voteList");
 
+	// Lobby protection (adapted from the MineHunt project). Turns the persistent lobby world
+	// (defaultWorldName) into a safe, calm "waiting area" while players wait between rounds.
+	public static final ConfigurationOption<Boolean> LOBBY_PROTECTION_ENABLED = new BooleanOption("lobbyProtection.enabled");
+	public static final ConfigurationOption<Boolean> LOBBY_LOCK_TIME_AND_WEATHER = new BooleanOption("lobbyProtection.lockTimeAndWeather");
+	public static final ConfigurationOption<Boolean> LOBBY_PREVENT_MOB_SPAWNING = new BooleanOption("lobbyProtection.preventMobSpawning");
+	public static final ConfigurationOption<Boolean> LOBBY_PREVENT_DAMAGE = new BooleanOption("lobbyProtection.preventDamage");
+	public static final ConfigurationOption<Boolean> LOBBY_RETURN_ON_VOID = new BooleanOption("lobbyProtection.returnOnVoid");
+
 	// Gameplay
 	public static final ConfigurationOption<Integer> STARTING_COUNTDOWN_TIME = new IntegerOption("startingCountdownTime").withMin(0)
 			.withEditUpdate(ConfigurationOption.EditUpdateTime.AFTER_GAME);

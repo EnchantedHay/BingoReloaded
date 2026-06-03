@@ -2,7 +2,7 @@ package top.chancelethay.bingo.data;
 
 import top.chancelethay.bingo.BingoReloaded;
 import top.chancelethay.bingo.data.helper.SerializablePlayer;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.data.core.DataAccessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

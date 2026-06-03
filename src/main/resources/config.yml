@@ -101,6 +101,16 @@ teleportToLobbyAfterGame:
   delay: 10.0 # teleportation delay in seconds
   spread: 5 # spread in amount of blocks from the center. 0 means all players will teleport to the same exact position.
 
+# Lobby protection turns the lobby world (defaultWorldName) into a safe, calm "waiting area".
+# The bingo game itself always runs in the separate, regenerated worldReset world, so these rules
+# only ever affect players waiting in the lobby between rounds.
+lobbyProtection:
+  enabled: true # master switch for all of the options below
+  lockTimeAndWeather: true # keep the lobby locked to a clear midday (no day/night or weather cycle)
+  preventMobSpawning: true # stop natural mob spawns, wandering traders and patrols in the lobby
+  preventDamage: true # cancel fall, void, PVP and hunger damage for players in the lobby
+  returnOnVoid: true # teleport players back to the lobby spawn if they fall into the void
+
 # Use this to configure what options can be voted on.
 voteList:
   gamemodes:

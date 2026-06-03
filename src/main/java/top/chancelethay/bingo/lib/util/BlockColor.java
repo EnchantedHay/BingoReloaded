@@ -1,6 +1,6 @@
 package top.chancelethay.bingo.lib.util;
 
-import top.chancelethay.bingo.lib.api.item.ItemType;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
 import net.kyori.adventure.text.format.TextColor;
 
 public enum BlockColor

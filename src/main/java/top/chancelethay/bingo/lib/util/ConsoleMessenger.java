@@ -1,12 +1,11 @@
 package top.chancelethay.bingo.lib.util;
 
-import top.chancelethay.bingo.lib.api.PlatformResolver;
-import top.chancelethay.bingo.lib.api.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
 import net.kyori.adventure.text.Component;
 
 public class ConsoleMessenger
 {
-    private static final ServerSoftware PLATFORM = PlatformResolver.get();
+    private static final ServerSoftware PLATFORM = ServerSoftware.get();
 
     public static void log(String message) {
         PLATFORM.getComponentLogger().info(

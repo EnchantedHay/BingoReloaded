@@ -1,8 +1,8 @@
 package top.chancelethay.bingo.action;
 
 import top.chancelethay.bingo.lib.action.ActionTree;
-import top.chancelethay.bingo.lib.api.ActionUser;
-import top.chancelethay.bingo.lib.api.player.PlayerHandlePaper;
+import top.chancelethay.bingo.lib.platform.ActionUser;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.util.ComponentUtils;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
 import org.apache.commons.lang3.StringUtils;
@@ -34,7 +34,7 @@ public class CommandTemplate implements TabExecutor
 
         ActionUser user;
         if (commandSender instanceof Player player) {
-            user = new PlayerHandlePaper(player);
+            user = new PlayerHandle(player);
         } else if (commandSender instanceof ConsoleCommandSender console){
             user = new ConsoleActionUser(console);
         } else {
@@ -62,7 +62,7 @@ public class CommandTemplate implements TabExecutor
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] strings) {
         ActionUser user;
         if (commandSender instanceof Player player) {
-            user = new PlayerHandlePaper(player);
+            user = new PlayerHandle(player);
         } else if (commandSender instanceof ConsoleCommandSender console){
             user = new ConsoleActionUser(console);
         } else {

@@ -7,9 +7,8 @@ import top.chancelethay.bingo.data.BingoStatType;
 import top.chancelethay.bingo.gameloop.BingoSession;
 import top.chancelethay.bingo.gameloop.GameManager;
 import top.chancelethay.bingo.gameloop.phase.BingoGame;
-import top.chancelethay.bingo.lib.api.PlatformResolver;
-import top.chancelethay.bingo.lib.api.ServerSoftware;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
 import top.chancelethay.bingo.player.BingoParticipant;
 import top.chancelethay.bingo.player.team.BingoTeam;
@@ -41,12 +40,12 @@ public class BingoReloadedPlaceholderExpansion extends PlaceholderExpansion
 
     @Override
     public @NotNull String getAuthor() {
-        return String.join(", ", PlatformResolver.get().getExtensionInfo().authors());
+        return String.join(", ", ServerSoftware.get().getExtensionInfo().authors());
     }
 
     @Override
     public @NotNull String getVersion() {
-        return PlatformResolver.get().getExtensionInfo().version();
+        return ServerSoftware.get().getExtensionInfo().version();
     }
 
     @Override

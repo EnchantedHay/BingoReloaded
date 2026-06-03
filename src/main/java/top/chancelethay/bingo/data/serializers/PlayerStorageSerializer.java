@@ -1,9 +1,9 @@
 package top.chancelethay.bingo.data.serializers;
 
 import top.chancelethay.bingo.data.helper.SerializablePlayer;
-import top.chancelethay.bingo.lib.api.PlayerGamemode;
-import top.chancelethay.bingo.lib.api.WorldPosition;
-import top.chancelethay.bingo.lib.api.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.PlayerGamemode;
+import top.chancelethay.bingo.lib.platform.WorldPosition;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
 import top.chancelethay.bingo.lib.data.core.DataStorage;
 import top.chancelethay.bingo.lib.data.core.DataStorageSerializer;
 import top.chancelethay.bingo.lib.item.SerializableItem;

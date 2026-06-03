@@ -23,11 +23,10 @@ import top.chancelethay.bingo.data.serializers.PlayerStorageSerializer;
 import top.chancelethay.bingo.data.serializers.TaskTagStorageSerializer;
 import top.chancelethay.bingo.data.serializers.TeamTemplateStorageSerializer;
 import top.chancelethay.bingo.gameloop.GameManager;
-import top.chancelethay.bingo.lib.api.BingoReloadedRuntime;
-import top.chancelethay.bingo.lib.api.PlatformResolver;
-import top.chancelethay.bingo.lib.api.ServerSoftware;
-import top.chancelethay.bingo.lib.api.StatisticHandle;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.BingoReloadedRuntime;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.StatisticHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.data.core.DataAccessor;
 import top.chancelethay.bingo.lib.data.core.DataStorageSerializerRegistry;
 import top.chancelethay.bingo.lib.data.core.VirtualDataAccessor;
@@ -80,7 +79,7 @@ public class BingoReloaded implements Namespaced {
 	private boolean useResourcePack = false;
 
 	BingoReloaded(BingoReloadedRuntime runtime) {
-		this.platform = PlatformResolver.get();
+		this.platform = ServerSoftware.get();
 		this.runtime = runtime;
 	}
 

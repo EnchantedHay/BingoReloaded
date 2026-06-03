@@ -1,0 +1,195 @@
+package top.chancelethay.bingo.gui.creator;
+
+import top.chancelethay.bingo.BingoReloaded;
+import top.chancelethay.bingo.data.BingoCardData;
+import top.chancelethay.bingo.data.BingoMessage;
+import top.chancelethay.bingo.data.TaskListData;
+import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
+import top.chancelethay.bingo.lib.inventory.BasicMenu;
+import top.chancelethay.bingo.lib.inventory.FilterType;
+import top.chancelethay.bingo.lib.inventory.InventoryMenu;
+import top.chancelethay.bingo.lib.inventory.PaginatedSelectionMenu;
+import top.chancelethay.bingo.lib.inventory.UserInputMenu;
+import top.chancelethay.bingo.lib.item.ItemTemplate;
+import top.chancelethay.bingo.util.BingoPlayerSender;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Material;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+
+// This class is used to navigate through the cards and lists.
+// Uses a double ListPicker, one for cards and one for lists.
+public class BingoCreatorMenu extends BasicMenu
+{
+    private final BingoCardData cardsData;
+    public static final ItemTemplate CARD = new ItemTemplate(1, 1, ItemType.of(Material.FILLED_MAP), BingoReloaded.applyTitleFormat("Edit Cards"), Component.text("Click to view and edit bingo cards!"));
+    public static final ItemTemplate LIST = new ItemTemplate(4, 1, ItemType.of(Material.PAPER), BingoReloaded.applyTitleFormat("Edit Lists"), Component.text("Click to view and edit bingo lists!"));
+    public static final ItemTemplate TAGS = new ItemTemplate(7, 1, ItemType.of(Material.NAME_TAG), BingoReloaded.applyTitleFormat("Edit Tags"), Component.text("Click to view and edit task tags!"));
+
+    private static final ItemType REMOVE_ICON = ItemType.of(Material.BARRIER);
+    private static final ItemType COPY_ICON = ItemType.of(Material.SHULKER_SHELL);
+    private static final ItemType RENAME_ICON = ItemType.of(Material.NAME_TAG);
+    private static final ItemType SAVE_ICON = ItemType.of(Material.DIAMOND);
+
+    public BingoCreatorMenu(MenuBoard manager) {
+        super(manager, Component.text("Card Creator"), 3);
+        this.cardsData = new BingoCardData();
+        addAction(CARD, arguments -> createCardPicker().open(arguments.player()));
+        addAction(LIST, arguments -> createListPicker().open(arguments.player()));
+        addAction(TAGS, arguments -> createTagPicker().open(arguments.player()));
+    }
+
+    private BasicMenu createCardPicker() {
+        return new PaginatedSelectionMenu(getMenuBoard(), Component.text("Choose A Card"), new ArrayList<>(), FilterType.DISPLAY_NAME)
+        {
+            private static final ItemTemplate CREATE_CARD = new ItemTemplate(6, 5, ItemType.of(Material.EMERALD),
+                    Component.text("New Card").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD));
+
+            @Override
+            public void beforeOpening(PlayerHandle player) {
+                addAction(CREATE_CARD, args -> createCard(args.player()));
+                clearItems();
+
+                List<ItemTemplate> items = new ArrayList<>();
+                for (String card : cardsData.getCardNames()) {
+                    ItemTemplate item = new ItemTemplate(ItemType.of(Material.FILLED_MAP), Component.text(card),
+                            Component.text("This card contains " + cardsData.getListNames(card).size() + " list(s)"))
+                            .addDescription("input", 5, InventoryMenu.INPUT_RIGHT_CLICK.append(Component.text("more options")));
+                    items.add(item);
+                }
+                addItemsToSelect(items);
+            }
+
+            @Override
+            public void onOptionClickedDelegate(InventoryClickEvent event, ItemTemplate clickedOption, PlayerHandle player) {
+                if (event.getClick() == ClickType.LEFT) {
+                    openCardEditor(clickedOption.getPlainTextName(), player);
+                } else if (event.getClick() == ClickType.RIGHT) {
+                    createCardContext(clickedOption.getPlainTextName()).open(player);
+                }
+            }
+        };
+    }
+
+    private BasicMenu createListPicker() {
+        return new PaginatedSelectionMenu(getMenuBoard(), Component.text("Choose A List"), new ArrayList<>(), FilterType.DISPLAY_NAME)
+        {
+            private static final ItemTemplate CREATE_LIST = new ItemTemplate(6, 5, ItemType.of(Material.EMERALD),
+                    Component.text("New List").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD));
+
+            @Override
+            public void beforeOpening(PlayerHandle player) {
+                addAction(CREATE_LIST, p -> createList(player));
+                clearItems();
+
+                List<ItemTemplate> items = new ArrayList<>();
+                for (String list : cardsData.lists().getListNames()) {
+                    ItemTemplate item = new ItemTemplate(ItemType.of(Material.PAPER), Component.text(list),
+                            Component.text("This list contains " + cardsData.lists().getTaskCount(list) + " task(s)"))
+                            .addDescription("input", 5, InventoryMenu.INPUT_RIGHT_CLICK.append(Component.text("more options")));
+                    items.add(item);
+                }
+                addItemsToSelect(items);
+            }
+
+            @Override
+            public void onOptionClickedDelegate(InventoryClickEvent event, ItemTemplate clickedOption, PlayerHandle player) {
+                if (event.getClick() == ClickType.LEFT) {
+                    openListEditor(clickedOption.getPlainTextName(), player);
+                } else if (event.getClick() == ClickType.RIGHT) {
+                    createListContext(clickedOption.getPlainTextName()).open(player);
+                }
+            }
+        };
+    }
+
+    public BasicMenu createTagPicker() {
+        return new TagEditorMenu(getMenuBoard(), cardsData.tags());
+    }
+
+    public void createCard(PlayerHandle player) {
+        new UserInputMenu(getMenuBoard(), Component.text("Enter new card name"), (input) -> {
+            if (!input.isEmpty())
+                openCardEditor(input.toLowerCase().replace(" ", "_"), player);
+        }, "name")
+                .open(player);
+    }
+
+    public void createList(PlayerHandle player) {
+        new UserInputMenu(getMenuBoard(), Component.text("Enter new list name"), (input) -> {
+            if (!input.isEmpty())
+                openListEditor(input.toLowerCase().replace(" ", "_"), player);
+        }, "name")
+                .open(player);
+    }
+
+    private void openCardEditor(String cardName, PlayerHandle player) {
+        if (BingoCardData.DEFAULT_CARD_NAMES.contains(cardName)) {
+            BingoPlayerSender.sendMessage(Component.text("Cannot edit default card, use right click to duplicate them instead!").color(NamedTextColor.RED), player);
+            return;
+        }
+        CardEditorMenu editor = new CardEditorMenu(getMenuBoard(), cardName, cardsData);
+        editor.open(player);
+    }
+
+    private void openListEditor(String listName, PlayerHandle player) {
+        if (TaskListData.DEFAULT_LIST_NAMES.contains(listName)) {
+            BingoPlayerSender.sendMessage(Component.text("Cannot edit default lists, use right click to duplicate them instead!").color(NamedTextColor.RED), player);
+            return;
+        }
+        ListEditorMenu editor = new ListEditorMenu(getMenuBoard(), listName);
+        editor.open(player);
+    }
+
+
+    public BasicMenu createCardContext(String cardName) {
+        BasicMenu context = new BasicMenu(getMenuBoard(), Component.text(cardName), 1);
+        context.addAction(new ItemTemplate(0, REMOVE_ICON, BingoReloaded.applyTitleFormat("Remove")), (args) -> {
+                    cardsData.removeCard(cardName);
+                    context.close(args.player());
+                });
+        context.addAction(new ItemTemplate(1, COPY_ICON, BingoReloaded.applyTitleFormat("Duplicate")), (args) -> {
+                    cardsData.duplicateCard(cardName);
+                    context.close(args.player());
+                });
+        context.addAction(new ItemTemplate(2, RENAME_ICON, BingoReloaded.applyTitleFormat("Change Name")), (args) -> {
+                    new UserInputMenu(getMenuBoard(), Component.text("Change name to"), (input) -> {
+                        cardsData.renameCard(cardName, input);
+                        context.close(args.player());
+                    }, cardName)
+                            .open(args.player());
+                });
+        context.addCloseAction(new ItemTemplate(8, SAVE_ICON, BingoReloaded.applyTitleFormat(BingoMessage.MENU_EXIT.asPhrase())));
+        return context;
+    }
+
+    public BasicMenu createListContext(String listName) {
+        TaskListData listsData = cardsData.lists();
+
+        BasicMenu context = new BasicMenu(getMenuBoard(), Component.text(listName), 1);
+        context.addAction(new ItemTemplate(0, REMOVE_ICON, BingoReloaded.applyTitleFormat("Remove")), (args) -> {
+                    listsData.removeList(listName);
+                    context.close(args.player());
+                });
+        context.addAction(new ItemTemplate(1, COPY_ICON, BingoReloaded.applyTitleFormat("Duplicate")), (args) -> {
+                    listsData.duplicateList(listName);
+                    context.close(args.player());
+                });
+        context.addAction(new ItemTemplate(2, RENAME_ICON, BingoReloaded.applyTitleFormat("Change Name")), (args) -> {
+                    new UserInputMenu(getMenuBoard(), Component.text("Change name to"), (input) -> {
+                        listsData.renameList(listName, input);
+                        context.close(args.player());
+                    }, listName)
+                            .open(args.player());
+                });
+        context.addCloseAction(new ItemTemplate(8, SAVE_ICON, BingoReloaded.applyTitleFormat(BingoMessage.MENU_EXIT.asPhrase())));
+        return context;
+    }
+}

@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.data;
 
 import top.chancelethay.bingo.BingoReloaded;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.data.core.DataAccessor;
 import top.chancelethay.bingo.settings.CustomKit;
 import top.chancelethay.bingo.settings.PlayerKit;

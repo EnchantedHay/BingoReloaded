@@ -1,9 +1,9 @@
 package top.chancelethay.bingo.data;
 
 import top.chancelethay.bingo.BingoReloaded;
-import top.chancelethay.bingo.lib.api.ServerSoftware;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
-import top.chancelethay.bingo.lib.api.player.PlayerInfo;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerInfo;
 import top.chancelethay.bingo.lib.data.core.DataAccessor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

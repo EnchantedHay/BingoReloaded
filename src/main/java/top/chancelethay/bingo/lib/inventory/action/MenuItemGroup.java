@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.lib.inventory.action;
 
-import top.chancelethay.bingo.lib.api.item.StackHandlePaper;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.inventory.InventoryMenu;
 import top.chancelethay.bingo.lib.item.ItemTemplate;
 import org.bukkit.event.inventory.ClickType;
@@ -35,7 +35,7 @@ public class MenuItemGroup
                     actions.get(itemSlot).use(new MenuAction.ActionArguments(menu, player, clickType));
                 }
                 //TODO: find a way to update itemstack automatically on change, no matter where!
-                event.getInventory().setItem(itemSlot, ((StackHandlePaper)item.buildItem()).handle());
+                event.getInventory().setItem(itemSlot, item.buildItem().handle());
             }
         }
         return true;

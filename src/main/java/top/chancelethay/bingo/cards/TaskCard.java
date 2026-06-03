@@ -3,7 +3,7 @@ package top.chancelethay.bingo.cards;
 
 import top.chancelethay.bingo.api.CardMenu;
 import top.chancelethay.bingo.data.BingoMessage;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.player.BingoParticipant;
 import top.chancelethay.bingo.player.team.BingoTeam;
 import top.chancelethay.bingo.settings.gamemode.BingoGamemode;

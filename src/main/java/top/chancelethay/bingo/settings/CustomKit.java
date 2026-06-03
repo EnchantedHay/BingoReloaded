@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.settings;
 
-import top.chancelethay.bingo.lib.api.item.StackHandle;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.item.SerializableItem;
 import net.kyori.adventure.text.Component;
 

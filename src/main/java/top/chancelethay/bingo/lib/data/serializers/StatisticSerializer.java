@@ -1,9 +1,9 @@
 package top.chancelethay.bingo.lib.data.serializers;
 
-import top.chancelethay.bingo.lib.api.EntityType;
-import top.chancelethay.bingo.lib.api.StatisticHandle;
-import top.chancelethay.bingo.lib.api.StatisticType;
-import top.chancelethay.bingo.lib.api.item.ItemType;
+import top.chancelethay.bingo.lib.platform.EntityType;
+import top.chancelethay.bingo.lib.platform.StatisticHandle;
+import top.chancelethay.bingo.lib.platform.StatisticType;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
 import top.chancelethay.bingo.lib.data.core.DataStorage;
 import top.chancelethay.bingo.lib.data.core.DataStorageSerializer;
 import org.jetbrains.annotations.NotNull;

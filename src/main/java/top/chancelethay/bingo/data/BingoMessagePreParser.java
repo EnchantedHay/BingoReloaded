@@ -1,6 +1,6 @@
 package top.chancelethay.bingo.data;
 
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import org.jetbrains.annotations.Nullable;
 
 public interface BingoMessagePreParser {

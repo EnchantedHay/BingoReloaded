@@ -2,7 +2,7 @@ package top.chancelethay.bingo.menu;
 
 import top.chancelethay.bingo.data.config.BingoConfigurationData;
 import top.chancelethay.bingo.data.config.BingoOptions;
-import top.chancelethay.bingo.lib.menu.InfoMenu;
+import top.chancelethay.bingo.lib.display.InfoMenu;
 import top.chancelethay.bingo.player.EffectOptionFlags;
 import top.chancelethay.bingo.settings.BingoSettings;
 import top.chancelethay.bingo.settings.gamemode.BingoGamemodes;

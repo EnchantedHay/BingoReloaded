@@ -1,6 +1,6 @@
 package top.chancelethay.bingo.lib.data.core;
 
-import top.chancelethay.bingo.lib.api.ServerSoftware;
+import top.chancelethay.bingo.lib.platform.ServerSoftware;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
 import org.bukkit.configuration.file.YamlConfiguration;
 

@@ -1,6 +1,6 @@
 package top.chancelethay.bingo.api;
 
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.tasks.GameTask;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;

@@ -1,6 +1,6 @@
 package top.chancelethay.bingo.item;
 
-import top.chancelethay.bingo.lib.api.item.StackHandle;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
 import top.chancelethay.bingo.lib.item.ItemTemplate;
 import net.kyori.adventure.key.Key;
 import org.jetbrains.annotations.Nullable;

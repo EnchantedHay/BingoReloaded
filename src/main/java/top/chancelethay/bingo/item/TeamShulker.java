@@ -2,9 +2,9 @@ package top.chancelethay.bingo.item;
 
 import top.chancelethay.bingo.BingoReloaded;
 import top.chancelethay.bingo.data.config.BingoConfigurationData;
-import top.chancelethay.bingo.lib.api.item.ItemType;
-import top.chancelethay.bingo.lib.api.item.StackHandle;
-import top.chancelethay.bingo.lib.event.EventResult;
+import top.chancelethay.bingo.lib.platform.item.ItemType;
+import top.chancelethay.bingo.lib.platform.item.StackHandle;
+import top.chancelethay.bingo.lib.events.EventResult;
 import top.chancelethay.bingo.lib.item.ItemTemplate;
 import top.chancelethay.bingo.player.BingoParticipant;
 import net.kyori.adventure.key.Key;

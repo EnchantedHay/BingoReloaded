@@ -7,7 +7,7 @@ import top.chancelethay.bingo.api.TaskDisplayMode;
 import top.chancelethay.bingo.data.BingoMessage;
 import top.chancelethay.bingo.data.config.BingoOptions;
 import top.chancelethay.bingo.gameloop.phase.BingoGame;
-import top.chancelethay.bingo.lib.api.BingoReloadedRuntime;
+import top.chancelethay.bingo.lib.platform.BingoReloadedRuntime;
 import top.chancelethay.bingo.settings.BingoSettings;
 import top.chancelethay.bingo.tasks.TaskGenerator;
 

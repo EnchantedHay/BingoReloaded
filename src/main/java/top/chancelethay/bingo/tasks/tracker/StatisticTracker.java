@@ -1,8 +1,8 @@
 package top.chancelethay.bingo.tasks.tracker;
 
 import top.chancelethay.bingo.gameloop.phase.BingoGame;
-import top.chancelethay.bingo.lib.api.StatisticHandle;
-import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.platform.StatisticHandle;
+import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.player.BingoParticipant;
 import top.chancelethay.bingo.player.BingoPlayer;
 import top.chancelethay.bingo.player.team.BingoTeam;
