@@ -5,7 +5,7 @@ import top.chancelethay.bingo.api.CardDisplayInfo;
 import top.chancelethay.bingo.api.CardMenu;
 import top.chancelethay.bingo.api.HotswapCardMenu;
 import top.chancelethay.bingo.cards.hotswap.HotswapTaskSlot;
-import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.inventory.MenuBoard;
 import top.chancelethay.bingo.lib.item.ItemTemplate;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;

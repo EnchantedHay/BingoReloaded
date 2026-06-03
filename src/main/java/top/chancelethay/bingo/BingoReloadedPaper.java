@@ -13,7 +13,6 @@ import top.chancelethay.bingo.action.TeamChatCommand;
 import top.chancelethay.bingo.api.CardDisplayInfo;
 import top.chancelethay.bingo.api.CardMenu;
 import top.chancelethay.bingo.api.TeamDisplay;
-import top.chancelethay.bingo.api.TeamDisplayPaper;
 import top.chancelethay.bingo.data.BingoMessage;
 import top.chancelethay.bingo.data.updater.DataUpdaterV3_5_0;
 import top.chancelethay.bingo.data.config.BingoConfigurationData;
@@ -36,7 +35,7 @@ import top.chancelethay.bingo.gui.creator.BingoCreatorMenu;
 import top.chancelethay.bingo.lib.action.ActionTree;
 import top.chancelethay.bingo.lib.platform.BingoReloadedRuntime;
 import top.chancelethay.bingo.lib.platform.EntityType;
-import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.inventory.MenuBoard;
 import top.chancelethay.bingo.lib.platform.ServerSoftware;
 import top.chancelethay.bingo.lib.platform.WorldHandle;
 import top.chancelethay.bingo.lib.platform.item.StackHandle;
@@ -47,7 +46,6 @@ import top.chancelethay.bingo.lib.data.core.DataAccessor;
 import top.chancelethay.bingo.lib.data.core.YamlDataAccessor;
 import top.chancelethay.bingo.lib.events.EventListenerPaper;
 import top.chancelethay.bingo.lib.inventory.BasicMenu;
-import top.chancelethay.bingo.lib.inventory.MenuBoardPaper;
 import top.chancelethay.bingo.lib.display.EmptyDisplay;
 import top.chancelethay.bingo.lib.display.ScoreboardDisplay;
 import top.chancelethay.bingo.lib.util.ConsoleMessenger;
@@ -122,7 +120,7 @@ public class BingoReloadedPaper extends JavaPlugin implements BingoReloadedRunti
 
 	@Override
 	public void onEnable() {
-		this.menuBoard = new MenuBoardPaper(platform, this);
+		this.menuBoard = new MenuBoard(platform, this);
 
 		bingo.enable();
 
@@ -370,7 +368,7 @@ public class BingoReloadedPaper extends JavaPlugin implements BingoReloadedRunti
 
 	@Override
 	public TeamDisplay createTeamDisplay(BingoSession session) {
-		return new TeamDisplayPaper(session);
+		return new TeamDisplay(session);
 	}
 
 	@Override

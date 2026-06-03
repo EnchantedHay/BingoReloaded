@@ -114,7 +114,7 @@ public final class GameWorldManager {
 						long seed = randomSeedEachRound ? ThreadLocalRandom.current().nextLong() : 0L;
 						tasks.run(() -> createNextWorldStep(base, seed, randomSeedEachRound));
 					} catch (Throwable ex) {
-						ex.printStackTrace();
+						log.log(java.util.logging.Level.SEVERE, "[Worlds] Failed to prepare next game world", ex);
 						nextPreparing.set(false);
 					}
 				})
@@ -222,7 +222,7 @@ public final class GameWorldManager {
 						}
 				));
 			} catch (Throwable ex) {
-				ex.printStackTrace();
+				log.log(java.util.logging.Level.SEVERE, "[Worlds] Failed to regenerate game world", ex);
 				resetting.set(false);
 			}
 		});

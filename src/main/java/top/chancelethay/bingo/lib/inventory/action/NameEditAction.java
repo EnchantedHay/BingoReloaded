@@ -1,7 +1,8 @@
 package top.chancelethay.bingo.lib.inventory.action;
 
+import top.chancelethay.bingo.lib.inventory.MenuBoard;
 
-import top.chancelethay.bingo.lib.platform.MenuBoard;
+
 import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.inventory.UserInputMenu;
 import top.chancelethay.bingo.lib.item.ItemTemplate;

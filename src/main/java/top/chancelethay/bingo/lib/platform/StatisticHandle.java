@@ -12,7 +12,11 @@ import java.util.Set;
 
 public record StatisticHandle(@NotNull StatisticType statistic, @Nullable EntityType entityType, @Nullable ItemType itemType)
 {
-    private static final Set<EntityType> VALID_ENTITIES_FOR_STATISTICS = BingoReloaded.runtime().getValidEntityTypesForStatistics();
+    // Initialization-on-demand holder: the valid-entity set is computed from the runtime only
+    // when first accessed, so StatisticHandle can load before the plugin runtime is initialized.
+    private static final class ValidEntities {
+        static final Set<EntityType> SET = BingoReloaded.runtime().getValidEntityTypesForStatistics();
+    }
 
     public StatisticHandle(StatisticType stat)
     {
@@ -61,11 +65,11 @@ public record StatisticHandle(@NotNull StatisticType statistic, @Nullable Entity
     }
 
     public static Set<EntityType> getValidEntityTypes() {
-        return VALID_ENTITIES_FOR_STATISTICS;
+        return ValidEntities.SET;
     }
 
     public boolean isEntityValid() {
-        return VALID_ENTITIES_FOR_STATISTICS.contains(entityType());
+        return ValidEntities.SET.contains(entityType());
     }
 
     public StatisticType statisticType() {
@@ -104,14 +108,6 @@ public record StatisticHandle(@NotNull StatisticType statistic, @Nullable Entity
                     TIME_SINCE_REST,
                     TIME_SINCE_DEATH -> false;
             default -> true;
-        };
-    }
-
-    public static String createDescription(Statistic stat)
-    {
-        return switch (stat)
-        {
-            default -> "";
         };
     }
 

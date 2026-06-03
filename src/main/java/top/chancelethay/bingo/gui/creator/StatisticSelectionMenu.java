@@ -3,7 +3,7 @@ package top.chancelethay.bingo.gui.creator;
 import top.chancelethay.bingo.BingoReloaded;
 import top.chancelethay.bingo.data.BingoMessage;
 import top.chancelethay.bingo.lib.platform.EntityType;
-import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.inventory.MenuBoard;
 import top.chancelethay.bingo.lib.platform.StatisticHandle;
 import top.chancelethay.bingo.lib.platform.StatisticType;
 import top.chancelethay.bingo.lib.platform.item.ItemType;

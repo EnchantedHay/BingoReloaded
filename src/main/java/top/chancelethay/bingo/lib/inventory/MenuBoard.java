@@ -1,7 +1,6 @@
 package top.chancelethay.bingo.lib.inventory;
 
 
-import top.chancelethay.bingo.lib.platform.MenuBoard;
 import top.chancelethay.bingo.lib.platform.ServerSoftware;
 import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.data.core.DataStorage;
@@ -27,7 +26,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.UUID;
 
-public class MenuBoardPaper implements MenuBoard, Listener
+public class MenuBoard implements Listener
 {
     // Stores all currently open inventories by all players, using a stack system we can easily add or remove child inventories.
     protected final Map<UUID, Stack<Menu>> activeMenus;
@@ -37,7 +36,7 @@ public class MenuBoardPaper implements MenuBoard, Listener
 
     private static final Set<ClickType> CLICK_TYPES_TO_IGNORE = Set.of(ClickType.DOUBLE_CLICK, ClickType.DROP, ClickType.CREATIVE, ClickType.CONTROL_DROP, ClickType.SWAP_OFFHAND);
 
-    public MenuBoardPaper(ServerSoftware server, JavaPlugin plugin) {
+    public MenuBoard(ServerSoftware server, JavaPlugin plugin) {
 		this.plugin = plugin;
 		this.activeMenus = new HashMap<>();
         this.packetListener = new MenuPacketListener(server);
@@ -79,7 +78,6 @@ public class MenuBoardPaper implements MenuBoard, Listener
         player.closeInventory();
     }
 
-    @Override
     public JavaPlugin plugin() {
         return plugin;
     }

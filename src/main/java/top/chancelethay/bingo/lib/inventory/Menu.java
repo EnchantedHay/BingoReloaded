@@ -1,6 +1,5 @@
 package top.chancelethay.bingo.lib.inventory;
 
-import top.chancelethay.bingo.lib.platform.MenuBoard;
 import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.data.core.DataStorage;
 import net.kyori.adventure.key.Key;

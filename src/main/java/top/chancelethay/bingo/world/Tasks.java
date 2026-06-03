@@ -1,5 +1,6 @@
 package top.chancelethay.bingo.world;
 
+import top.chancelethay.bingo.lib.util.ConsoleMessenger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -75,7 +76,7 @@ public final class Tasks {
 		try {
 			it.next().run();
 		} catch (Throwable ex) {
-			ex.printStackTrace();
+			ConsoleMessenger.error("Error running scheduled task: " + ex.getMessage());
 		}
 		later(() -> runChainStep(it, delay), delay);
 	}

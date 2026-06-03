@@ -111,8 +111,7 @@ public final class StackHandle {
 
 				container.set(CUSTOM_DATA_KEY, PersistentDataType.BYTE_ARRAY, bytes);
 			} catch (IOException e) {
-				ConsoleMessenger.bug("Custom Data (in setStorage()) exception", this);
-				e.printStackTrace(); // You can log or rethrow this if needed
+				ConsoleMessenger.bug("Custom Data (in setStorage()) exception: " + e.getMessage(), this);
 			}
 		});
 	}
@@ -134,8 +133,7 @@ public final class StackHandle {
 			TagTree tree = TagTree.fromPayload(in);
 			return new TagDataStorage(tree);
 		} catch (IOException e) {
-			ConsoleMessenger.bug("Custom Data (in getStorage()) exception", this);
-			e.printStackTrace();
+			ConsoleMessenger.bug("Custom Data (in getStorage()) exception: " + e.getMessage(), this);
 			return new TagDataStorage();
 		}
 	}

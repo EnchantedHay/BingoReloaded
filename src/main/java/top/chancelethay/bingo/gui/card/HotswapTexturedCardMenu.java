@@ -8,7 +8,7 @@ import top.chancelethay.bingo.cards.CardSize;
 import top.chancelethay.bingo.cards.hotswap.HotswapTaskSlot;
 import top.chancelethay.bingo.data.TexturedMenuData;
 import top.chancelethay.bingo.gui.core.TexturedTitleBuilder;
-import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.inventory.MenuBoard;
 import top.chancelethay.bingo.lib.platform.item.ItemType;
 import top.chancelethay.bingo.lib.item.ItemTemplate;
 import top.chancelethay.bingo.settings.gamemode.BingoGamemode;

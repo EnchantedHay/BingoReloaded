@@ -6,7 +6,7 @@ import top.chancelethay.bingo.api.CardMenu;
 import top.chancelethay.bingo.data.BingoMessage;
 import top.chancelethay.bingo.gui.item.OpenCardSelectAction;
 import top.chancelethay.bingo.gui.item.TaskItemAction;
-import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.inventory.MenuBoard;
 import top.chancelethay.bingo.lib.platform.item.ItemType;
 import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.inventory.BasicMenu;

@@ -2,7 +2,7 @@ package top.chancelethay.bingo.gui;
 
 import top.chancelethay.bingo.data.record.GameRecord;
 import top.chancelethay.bingo.data.record.GameRecordData;
-import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.inventory.MenuBoard;
 import top.chancelethay.bingo.lib.platform.ServerSoftware;
 import top.chancelethay.bingo.lib.platform.item.ItemType;
 import top.chancelethay.bingo.lib.inventory.BasicMenu;

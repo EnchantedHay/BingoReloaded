@@ -5,7 +5,7 @@ import top.chancelethay.bingo.data.BingoMessage;
 import top.chancelethay.bingo.data.config.BingoOptions;
 import top.chancelethay.bingo.gameloop.BingoSession;
 import top.chancelethay.bingo.gui.TeamCardSelectMenu;
-import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.inventory.MenuBoard;
 import top.chancelethay.bingo.lib.platform.item.ItemType;
 import top.chancelethay.bingo.lib.inventory.action.MenuAction;
 import top.chancelethay.bingo.lib.item.ItemTemplate;

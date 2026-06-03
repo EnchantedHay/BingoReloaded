@@ -3,7 +3,7 @@ package top.chancelethay.bingo.gui;
 import top.chancelethay.bingo.data.BingoMessage;
 import top.chancelethay.bingo.data.CustomKitData;
 import top.chancelethay.bingo.gameloop.BingoSession;
-import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.inventory.MenuBoard;
 import top.chancelethay.bingo.lib.platform.item.ItemType;
 import top.chancelethay.bingo.lib.inventory.BasicMenu;
 import top.chancelethay.bingo.lib.item.ItemTemplate;

@@ -1,7 +1,7 @@
 package top.chancelethay.bingo.lib.dialog;
 
 import com.github.retrooper.packetevents.protocol.dialog.Dialog;
-import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.inventory.MenuBoard;
 import top.chancelethay.bingo.lib.data.core.DataStorage;
 import top.chancelethay.bingo.lib.util.PlayerDisplayTranslationKey;
 import net.kyori.adventure.key.Key;

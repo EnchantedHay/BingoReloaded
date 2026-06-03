@@ -2,7 +2,7 @@ package top.chancelethay.bingo.lib.dialog;
 
 import com.github.retrooper.packetevents.protocol.dialog.Dialog;
 import top.chancelethay.bingo.BingoReloadedPaper;
-import top.chancelethay.bingo.lib.platform.MenuBoard;
+import top.chancelethay.bingo.lib.inventory.MenuBoard;
 import top.chancelethay.bingo.lib.platform.player.PlayerHandle;
 import top.chancelethay.bingo.lib.inventory.Menu;
 import org.bukkit.event.inventory.ClickType;
