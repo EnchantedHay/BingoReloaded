@@ -1,0 +1,87 @@
+package top.chancelethay.bingo.cards;
+
+import top.chancelethay.bingo.api.CardMenu;
+import top.chancelethay.bingo.player.team.BingoTeam;
+import top.chancelethay.bingo.settings.gamemode.BingoGamemode;
+import top.chancelethay.bingo.settings.gamemode.BingoGamemodes;
+import top.chancelethay.bingo.tasks.GameTask;
+import top.chancelethay.bingo.tasks.tracker.TaskProgressTracker;
+import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class BingoTaskCard extends TaskCard
+{
+
+    public BingoTaskCard(CardMenu menu, CardSize size, TaskProgressTracker progressTracker) {
+        super(menu, size, progressTracker);
+    }
+
+    @Override
+    public BingoGamemode getMode() {
+        return BingoGamemodes.BINGO;
+    }
+
+    @Override
+    public boolean hasTeamWon(BingoTeam team) {
+        List<GameTask> allTasks = getTasks();
+        //check for rows and columns
+        for (int y = 0; y < size.size; y++) {
+            boolean completedRow = true;
+            boolean completedCol = true;
+            for (int x = 0; x < size.size; x++) {
+                int indexRow = size.size * y + x;
+                if (!allTasks.get(indexRow).isCompletedByTeam(team)) {
+                    completedRow = false;
+                }
+
+                int indexCol = size.size * x + y;
+                if (!allTasks.get(indexCol).isCompletedByTeam(team)) {
+                    completedCol = false;
+                }
+            }
+
+            if (completedRow || completedCol) {
+                return true;
+            }
+        }
+
+        // check for diagonals
+        boolean completedDiagonal1 = true;
+        for (int idx = 0; idx < size.fullCardSize; idx += size.size + 1) {
+            if (!allTasks.get(idx).isCompletedByTeam(team)) {
+                completedDiagonal1 = false;
+                break;
+            }
+        }
+
+        boolean completedDiagonal2 = true;
+        for (int idx = 0; idx < size.fullCardSize; idx += size.size - 1) {
+            if (idx != 0 && idx != size.fullCardSize - 1) {
+                if (!allTasks.get(idx).isCompletedByTeam(team)) {
+                    completedDiagonal2 = false;
+                    break;
+                }
+            }
+        }
+        return completedDiagonal1 || completedDiagonal2;
+    }
+
+    @Override
+    public BingoTaskCard copy(@Nullable Component alternateTitle) {
+        BingoTaskCard card = new BingoTaskCard(menu.copy(alternateTitle), this.size, getProgressTracker());
+        List<GameTask> newTasks = new ArrayList<>();
+        for (GameTask slot : getTasks()) {
+            newTasks.add(slot.copy());
+        }
+        card.setTasks(newTasks);
+        return card;
+    }
+
+    @Override
+    public boolean canGenerateSeparateCards() {
+        return true;
+    }
+}

@@ -1,10 +1,10 @@
 name: BingoReloaded # the plugins name as it should appear in the plugin list /pl
 version: 3.4.2 # the plugin's version
 author: Steven
-main: io.github.steaf23.bingoreloaded.BingoReloadedPaper
+main: top.chancelethay.bingo.BingoReloadedPaper
 api-version: 1.21.11
 
-softdepend: [PlaceholderAPI, MultiWorld]
+softdepend: [PlaceholderAPI, MultiWorld, Chunky]
 depend: [packetevents]
 
 permissions:
@@ -16,9 +16,9 @@ permissions:
     default: true
 
 commands:
-  autobingo:
+  bingoadmin:
     permission: bingo.admin
-    description: Used to start and manage settings for bingo games through commands only.
+    description: Used to manage bingo sessions and game settings through commands only.
     permission-message: §CYou don't have permission to use this command!
   bingo:
     permission: bingo.player

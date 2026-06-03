@@ -1,0 +1,21 @@
+package top.chancelethay.bingo.placeholder;
+
+import top.chancelethay.bingo.BingoReloaded;
+import top.chancelethay.bingo.lib.data.core.DataAccessor;
+
+public class BingoPlaceholderFormatter
+{
+    private static final DataAccessor DATA = BingoReloaded.getDataAccessor("placeholders");
+
+    public String format(BingoReloadedPlaceholder placeholder) {
+        return DATA.getString("placeholders." + placeholder.getName() + ".format", "{0}");
+    }
+
+    /**
+     * Overloaded function to get the full team format when placeholder api is not used.
+     * @return format for bingoreloaded_team_full placeholder
+     */
+    public String getTeamFullFormat() {
+        return DATA.getString("placeholders.team_full.format", "");
+    }
+}

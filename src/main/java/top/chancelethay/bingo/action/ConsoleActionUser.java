@@ -1,0 +1,27 @@
+package top.chancelethay.bingo.action;
+
+import top.chancelethay.bingo.lib.api.ActionUser;
+import net.kyori.adventure.audience.Audience;
+import org.bukkit.command.ConsoleCommandSender;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
+public class ConsoleActionUser implements ActionUser {
+
+	private final ConsoleCommandSender console;
+
+	public ConsoleActionUser(ConsoleCommandSender console) {
+		this.console = console;
+	}
+
+	@Override
+	public boolean hasPermission(String permission) {
+		return console.hasPermission(permission);
+	}
+
+	@Override
+	public @NotNull Iterable<? extends Audience> audiences() {
+		return List.of(console);
+	}
+}

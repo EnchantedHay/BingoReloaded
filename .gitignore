@@ -40,3 +40,10 @@ BingoReloadedCompanion/run/
 BingoReloadedCompanion/build/
 /run/*
 /hytale/build/*
+
+# CodeWhale & Claude local config
+.codewhale/
+.claude/
+
+# Screenshots
+screenshots/

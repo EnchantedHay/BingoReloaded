@@ -1,8 +1,0 @@
-{
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "bingoreloaded:item/info",
-		"particle": "bingoreloaded:item/info"
-	}
-	
-}

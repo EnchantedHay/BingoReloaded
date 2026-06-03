@@ -1,0 +1,146 @@
+package top.chancelethay.bingo.data;
+
+import top.chancelethay.bingo.BingoReloaded;
+import top.chancelethay.bingo.lib.data.core.DataAccessor;
+import top.chancelethay.bingo.lib.data.core.DataStorage;
+import top.chancelethay.bingo.lib.util.ConsoleMessenger;
+import top.chancelethay.bingo.tasks.data.TaskData;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+
+/**
+ * This class is used to interface with the lists_x.yml file.
+ */
+public class TaskListData
+{
+    public static final Set<String> DEFAULT_LIST_NAMES = Set.of(
+            "default_items",
+            "default_advancements",
+            "default_statistics"
+    );
+
+    private final DataAccessor defaultData = BingoReloaded.getDataAccessor("data/default_lists");
+    private final DataAccessor data = BingoReloaded.getDataAccessor("data/" + BingoReloaded.getDefaultTasksVersion());
+
+    public List<TaskData> getTasks(String listName) {
+        return getTasks(listName, EnumSet.allOf(TaskData.TaskType.class));
+    }
+
+    public List<TaskData> getTasks(String listName, EnumSet<TaskData.TaskType> allowedTypes) {
+        Collection<TaskData> tasks;
+        if (defaultData.contains(listName + ".tasks")) {
+            tasks = defaultData.getSerializableList(listName + ".tasks", TaskData.class);
+        } else if (data.contains(listName + ".tasks")) {
+            tasks = data.getSerializableList(listName + ".tasks", TaskData.class);
+        } else {
+            return List.of();
+        }
+
+        return tasks.stream().filter((i -> i != null && allowedTypes.contains(i.getType()))).toList();
+    }
+
+    public int getTaskCount(String listName)
+    {
+        if (DEFAULT_LIST_NAMES.contains(listName)) {
+            return defaultData.getInt(listName + ".size", 0);
+        } else {
+            return data.getInt(listName + ".size", 0);
+        }
+    }
+
+    public void saveTasksFromGroup(String listName, List<TaskData> group, List<TaskData> tasksToSave)
+    {
+        Set<TaskData> savedTasks = new HashSet<>(getTasks(listName));
+        Set<TaskData> tasksToRemove = group.stream().filter(t ->
+                tasksToSave.stream().noneMatch(i -> i.equals(t))).collect(Collectors.toSet());
+
+        for (TaskData t : tasksToRemove)
+        {
+            savedTasks.remove(t);
+        }
+
+        for (TaskData task : tasksToSave)
+        {
+            // If the task cant be added to this, update the existing entry instead,
+            //      used for CountableTasks since their count doesn't get used in hash comparisons
+            if (!savedTasks.add(task))
+            {
+                savedTasks.remove(task);
+                savedTasks.add(task);
+            }
+        }
+
+        data.setSerializableList(listName + ".tasks", TaskData.class, new ArrayList<>(savedTasks));
+        data.setInt(listName + ".size", savedTasks.size());
+        data.saveChanges();
+    }
+
+    public boolean removeList(String listName)
+    {
+        if (!data.contains(listName))
+            return false;
+
+        if (DEFAULT_LIST_NAMES.contains(listName)) {
+            ConsoleMessenger.error("Cannot remove default lists!");
+            return false;
+        }
+
+        data.erase(listName);
+        data.saveChanges();
+        return true;
+    }
+
+    public boolean duplicateList(String listName)
+    {
+        if (!data.contains(listName) && !defaultData.contains(listName))
+            return false;
+
+        DataStorage list;
+        if (DEFAULT_LIST_NAMES.contains(listName)) {
+            list = defaultData.getStorage(listName);
+        } else {
+            list = data.getStorage(listName);
+        }
+
+        String newName = listName + "_copy";
+        if (data.contains(newName)) // Card with newName already exists
+            return false;
+
+        data.setStorage(newName, list);
+        data.saveChanges();
+        return true;
+    }
+
+    public boolean renameList(String oldName, String newName)
+    {
+        if (DEFAULT_LIST_NAMES.contains(oldName) || DEFAULT_LIST_NAMES.contains(newName))
+            return false;
+        if (!data.contains(oldName))
+            return false;
+        if (data.contains(newName)) // Card with newName already exists
+            return false;
+
+        var list = data.getStorage(oldName);
+        data.setStorage(newName, list);
+        data.erase(oldName);
+        data.saveChanges();
+        return true;
+    }
+
+    /**
+     * @return All the list names present in the lists_x.yml file.
+     */
+    public Set<String> getListNames()
+    {
+		Set<String> names = new HashSet<>(defaultData.getKeys());
+		names.addAll(data.getKeys());
+        return names;
+    }
+}

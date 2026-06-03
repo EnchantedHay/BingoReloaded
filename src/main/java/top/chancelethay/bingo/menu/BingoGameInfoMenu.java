@@ -1,0 +1,89 @@
+package top.chancelethay.bingo.menu;
+
+import top.chancelethay.bingo.gameloop.BingoSession;
+import top.chancelethay.bingo.lib.menu.InfoMenu;
+import top.chancelethay.bingo.lib.util.ComponentUtils;
+import top.chancelethay.bingo.player.BingoParticipant;
+import top.chancelethay.bingo.player.team.BingoTeam;
+import top.chancelethay.bingo.player.team.SoloTeamManager;
+import top.chancelethay.bingo.player.team.TeamManager;
+import top.chancelethay.bingo.settings.BingoSettings;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class BingoGameInfoMenu extends InfoMenu {
+
+	// map of team IDs and their scores
+	private final Map<String, Integer> teamScores;
+	private final BingoSession session;
+	private final boolean showPlayerNames;
+
+	private static final Component PLAYER_PREFIX = ComponentUtils.MINI_BUILDER.deserialize("<gray><bold> ┗ </bold></gray><white>");
+
+	public BingoGameInfoMenu(BingoSession session, boolean showPlayerNames) {
+		this.session = session;
+		this.showPlayerNames = showPlayerNames;
+		this.teamScores = new HashMap<>();
+	}
+
+	public void updateWinScore(BingoSettings settings) {
+		addField("win_goal", settings.mode().winScoreText(settings));
+	}
+
+	public void updateTeamScores() {
+		if (!session.isRunning())
+			return;
+
+		for (BingoTeam t : session.teamManager.getActiveTeams()) {
+			teamScores.put(t.getIdentifier(), t.getCompleteCount());
+		}
+
+		List<Component> teamInfo = new ArrayList<>();
+		List<Component> teamInfoCondensed = new ArrayList<>();
+
+		TeamManager teamManager = session.teamManager;
+
+		boolean useFullTeamDisplay = showPlayerNames && !(teamManager instanceof SoloTeamManager);
+
+		teamManager.getActiveTeams().getTeams().stream()
+				.sorted(Comparator.comparingInt(BingoTeam::getCompleteCount).reversed())
+				.forEach(team -> {
+					Component teamScore;
+					// In the case of the solo teams, we want to show the player names instead of the team prefix (since that is just an icon)
+					if (teamManager instanceof SoloTeamManager) {
+						teamScore = team.getColoredName();
+					} else {
+						teamScore = team.getPrefix();
+					}
+					teamScore = teamScore.append(Component.text(": ", NamedTextColor.WHITE)
+							.append(Component.text(teamScores.get(team.getIdentifier())).decorate(TextDecoration.BOLD)));
+
+					teamInfo.add(teamScore);
+					teamInfoCondensed.add(teamScore);
+
+					// FIXME: REFACTOR don't grow menu larger than allowed size (15 lines)
+
+					if (useFullTeamDisplay) {
+						for (BingoParticipant player : team.getMembers()) {
+							teamInfo.add(PLAYER_PREFIX.append(player.getDisplayName()));
+						}
+					}
+				});
+
+		addField("team_info", teamInfo.toArray(Component[]::new));
+		addField("team_info_condensed", teamInfoCondensed.toArray(Component[]::new));
+	}
+
+	public void setup(BingoSettings settings) {
+		this.teamScores.clear();
+		updateTeamScores();
+		updateWinScore(settings);
+	}
+}

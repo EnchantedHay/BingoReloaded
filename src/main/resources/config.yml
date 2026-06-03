@@ -3,19 +3,9 @@ version: 3.4.2
 #    General Configuration Options
 # ==========================================================================
 
-# Choose between:
-#   - SINGULAR: The main server world is repurposed for the use of bingo. This mode assumes that bingo is the only gamemode or gameplay option on the server
-#       This makes is good to just play a few rounds with some friends without worrying about the world configurations
-#       This can also be used for bigger server networks where each server represents an instance of the game.
-#   - MULTIPLE: The plugin creates worlds specifically for the purpose of playing bingo.
-#       The main world can be converted to a lobby world but this is not required.
-configuration: SINGULAR
-
-# This option means different things for each configuration:
-#   - SINGULAR: This world is the one where bingo is played. The plugin will not create this world, so make sure to create it before running this plugin.
-#     to allow the plugin to use the Nether and End dimensions, the names `<defaultWorldName>_nether` and `<defaultWorldName>_the_end` must also be valid worlds.
-#   - MULTIPLE: This world is used more like a lobby world, however it is not required. The actual game worlds can be created using autobingo commands .
-#     In this case, players can be teleported to any active game world using the /autobingo addplayer command
+# The persistent lobby world. Players wait here between rounds while the dedicated game world is
+# regenerated. The plugin does NOT create this world, so make sure it exists before running the plugin.
+# The actual bingo game runs in a separate, regenerated world configured under `worldReset` below.
 defaultWorldName: world
 
 # The yml file that contains the language data that will be used for this plugin
@@ -41,11 +31,11 @@ sendCommandBeforeGameStarts: '' # command to send
 # SURVIVAL, CREATIVE, SPECTATOR, ADVENTURE, NONE
 playerGamemodeAfterGame: SURVIVAL
 
-# If true this will prevent the player from receiving the voting item, allowing custom implementations using the available autobingo command.
-# Note: This will also disallow the use of the /bingo vote command such that only /autobingo <world_name> vote can be used to vote on behalf of a player.
+# If true this will prevent the player from receiving the voting item, allowing custom implementations using the available bingoadmin command.
+# Note: This will also disallow the use of the /bingo vote command such that only /bingoadmin <world_name> vote can be used to vote on behalf of a player.
 voteUsingCommandsOnly: false
 
-# If true this will prevent the player from receiving the team selection item, allowing custom implementations using the available autobingo command.
+# If true this will prevent the player from receiving the team selection item, allowing custom implementations using the available bingoadmin command.
 # Note: /bingo join will still be allowed, and so is joining using /bingo and selecting the Join Team option.
 selectTeamsUsingCommandsOnly: false
 
@@ -141,17 +131,8 @@ voteList:
 # The amount of time in seconds before the game will release the players.
 startingCountdownTime: 10
 
-# When the game starts everyone will be teleported in a random square radius
-#   between 0 and teleportMaxDistance blocks from 0,0. (no more than 1.000.000 blocks)
-teleportMaxDistance: 1000000
-
-# Decide whether to teleport players:
-#   - everyone together (ALL),
-#   - everyone apart (ALONE),
-#   - everyone with their teammates (TEAM),
-#   - no one gets teleported at all (NONE),
-#   - using any other value will make it so no one teleports at all at the start of the game.
-playerTeleportStrategy: ALL
+# (Player start placement is handled by the `worldReset` scatter options near the bottom of this file:
+#  players are scattered safely around the freshly regenerated world's spawn.)
 
 # If true, the game will send a message to players that died while playing the game
 #   that can be used to teleport them back.
@@ -228,16 +209,6 @@ savePlayerInformation: true
 #   (To prevent this from happening at all, disable savePlayerInformation)
 loadPlayerInformationStrategy: AFTER_LEAVING_WORLD
 
-# ==========================================================================
-#    Configuration: MULTIPLE Specific Configuration Options
-# ==========================================================================
-# Specify a list of worlds to create on server startup using /autobingo <world_name> create automatically.
-defaultWorlds:
-  - bingo_world
-
-# All worlds are automatically reset (removed and created again) when (re)starting the server. When false, this does not reset the worlds named specified by defaultWorlds.
-clearDefaultWorlds: true
-
 # When not empty, uses the noise generation settings specified by the key in any datapack installed to the main world.
 # By default, it uses the vanilla world generation, but it can be configured to work for the bingoreloaded datapack or any other datapack with noise generation settings.
 # This is formatted as a namespaced key, where the name of the datapack comes first and is (in this case) followed by the name of the worldgen/noise_settings file.
@@ -245,3 +216,27 @@ clearDefaultWorlds: true
 # If you want to use generation included in the bingoreloaded datapack, make sure to add it to your main world and set this setting to "bingoreloaded:bingo"
 # And then make sure to restart the server to apply the changes.
 customWorldGeneration: "null"
+
+# ==========================================================================
+#    World Reset (MineHunt-style regeneration)
+# ==========================================================================
+# The bingo game runs in a dedicated world that is fully regenerated for every round. While a game
+# is running, the next round's world is pre-generated in the background (using Chunky if installed)
+# and then swapped in, so every game takes place in a fresh, never-before-explored world at spawn.
+# The world named by `defaultWorldName` above is used as the persistent lobby that players return to
+# between rounds. Players are scattered safely around the fresh world's spawn at the start of a game.
+worldReset:
+  # Name of the dedicated, regenerated game world (and its _nether/_the_end counterparts). This world
+  # is managed entirely by the plugin and must NOT be your main/lobby world.
+  gameWorldName: bingo_game
+  # Radius (in blocks) around spawn to pre-generate for the next round. Requires the Chunky plugin to
+  # be installed; without Chunky, worlds are still regenerated but not pre-generated. 0 disables it.
+  preloadRadius: 256
+  # Use a new random seed for every regenerated world (true) or always the default seed (false).
+  randomSeedEachRound: true
+  # Ring radius (in blocks) around spawn that players are scattered onto at the start of a game.
+  scatterRadius: 64
+  # Random +/- variation added to the scatter radius per player.
+  scatterJitter: 16
+  # Maximum attempts to find a safe spot per player before falling back to the world spawn.
+  scatterMaxTries: 16

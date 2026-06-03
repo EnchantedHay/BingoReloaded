@@ -1,0 +1,24 @@
+package top.chancelethay.bingo.data;
+
+import top.chancelethay.bingo.BingoReloaded;
+import top.chancelethay.bingo.lib.data.core.DataAccessor;
+import top.chancelethay.bingo.lib.data.core.tag.TagDataType;
+import net.kyori.adventure.text.Component;
+
+import java.util.List;
+import java.util.Map;
+
+public class ScoreboardData
+{
+    // Arguments can be multiline, which is why every argument needs to be saved as a Component array
+    public record SidebarTemplate(String title, Map<String, Component[]> arguments, String... lines) {}
+
+    private final DataAccessor newData = BingoReloaded.getDataAccessor("scoreboards");
+
+    public SidebarTemplate loadTemplate(String name, Map<String, Component[]> arguments) {
+        String title = newData.getString(name + ".title", "");
+        List<String> sidebar = newData.getList(name + ".sidebar", TagDataType.STRING);
+
+        return new SidebarTemplate(title, arguments, sidebar.toArray(new String[]{}));
+    }
+}

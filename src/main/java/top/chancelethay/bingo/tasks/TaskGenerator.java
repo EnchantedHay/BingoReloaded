@@ -1,0 +1,169 @@
+package top.chancelethay.bingo.tasks;
+
+import top.chancelethay.bingo.cards.CardSize;
+import top.chancelethay.bingo.data.BingoCardData;
+import top.chancelethay.bingo.data.TaskListData;
+import top.chancelethay.bingo.data.config.BingoOptions;
+import top.chancelethay.bingo.gameloop.phase.BingoGame;
+import top.chancelethay.bingo.lib.api.item.ItemType;
+import top.chancelethay.bingo.lib.util.ConsoleMessenger;
+import top.chancelethay.bingo.settings.BingoSettings;
+import top.chancelethay.bingo.tasks.data.ItemTask;
+import top.chancelethay.bingo.tasks.data.TaskData;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+public class TaskGenerator
+{
+    public record GeneratorSettings(
+            String cardName,
+            int seed,
+            EnumSet<TaskData.TaskType> includedTypes,
+            CardSize size,
+            Set<String> blacklistedTags) {}
+
+    private static final TaskData DEFAULT_TASK = new ItemTask(ItemType.of("dirt"), 1);
+
+    /**
+     * Generating a bingo card has a few steps:
+     * - Create task shuffler
+     * - Create a ticketlist. This list contains a list name for each task on the card,
+     * based on how often an item from that list should appear on the card.
+     * - Using the ticketlist, pick a random task from each ticketlist entry to put on the card.
+     * - Finally shuffle the tasks and add them to the card.
+     * If the final task count is lower than the amount of spaces available on the card, it will be filled up using default tasks.
+     */
+    public static List<GameTask> generateCardTasks(GeneratorSettings settings) {
+        BingoCardData cardsData = new BingoCardData();
+        TaskListData listsData = cardsData.lists();
+        // Create shuffler
+        Random shuffler;
+        if (settings.seed == 0) {
+            shuffler = new Random();
+        } else {
+            shuffler = new Random(settings.seed);
+        }
+
+        Map<String, List<TaskData>> taskMap = new HashMap<>();
+        for (String listName : cardsData.getListNames(settings.cardName)) {
+            List<TaskData> tasks = new ArrayList<>(filterBySettings(listsData.getTasks(listName, settings.includedTypes), settings));
+            if (!tasks.isEmpty()) {
+                Collections.shuffle(tasks, shuffler);
+                taskMap.put(listName, tasks);
+            }
+        }
+
+        // Create ticketList
+        List<String> ticketList = new ArrayList<>();
+        for (String listName : cardsData.getListsSortedByMin(settings.cardName)) {
+            if (!taskMap.containsKey(listName)) {
+                continue;
+            }
+
+            int proportionalMin = Math.max(1, cardsData.getListMin(settings.cardName, listName));
+            for (int i = 0; i < proportionalMin; i++) {
+                ticketList.add(listName);
+            }
+        }
+        List<String> overflowList = new ArrayList<>();
+        for (String listName : cardsData.getListNames(settings.cardName)) {
+            int listMin = cardsData.getListMin(settings.cardName, listName);
+            int listMax = cardsData.getListMax(settings.cardName, listName);
+
+            if (!taskMap.containsKey(listName)) {
+                continue;
+            }
+
+            int proportionalMin = Math.max(1, listMin);
+            int proportionalMax = listMax;
+
+            for (int i = 0; i < proportionalMax - proportionalMin; i++) {
+                overflowList.add(listName);
+            }
+        }
+
+        int fullCardSize = settings.size.fullCardSize;
+
+        Collections.shuffle(overflowList, shuffler);
+        ticketList.addAll(overflowList);
+        if (ticketList.size() > fullCardSize)
+            ticketList = ticketList.subList(0, fullCardSize);
+
+        // Pick random tasks
+        List<TaskData> newTasks = new ArrayList<>();
+        for (String listName : ticketList) {
+            // pop the first task in the list (which is random because we shuffled it beforehand) and add it to our final tasks
+            List<TaskData> tasks = taskMap.get(listName);
+            if (!tasks.isEmpty()) {
+                newTasks.add(tasks.removeLast());
+            }
+            else {
+                ConsoleMessenger.error("Found empty task list '" + listName + "'.");
+            }
+        }
+        while (newTasks.size() < fullCardSize) {
+            newTasks.add(DEFAULT_TASK);
+        }
+        newTasks = newTasks.subList(0, fullCardSize);
+
+        // Shuffle and add tasks to the card.
+        Collections.shuffle(newTasks, shuffler);
+        return newTasks.stream().map(TaskGenerator::createTaskFromData).toList();
+    }
+
+    public static GeneratorSettings generatorSettingsFromGame(BingoGame game) {
+        BingoSettings settings = game.getSettings();
+        Set<String> tags = settings.card().excludedTags();
+        if (game.getConfig().getOptionValue(BingoOptions.DISABLE_NETHER)) {
+            tags.add("nether");
+        }
+        if (game.getConfig().getOptionValue(BingoOptions.DISABLE_THE_END)) {
+            tags.add("the_end");
+        }
+
+        EnumSet<TaskData.TaskType> set = EnumSet.of(TaskData.TaskType.ITEM);
+        if (game.useAdvancements()) {
+            set.add(TaskData.TaskType.ADVANCEMENT);
+        }
+        if (game.useStatistics()) {
+            set.add(TaskData.TaskType.STATISTIC);
+        }
+
+        return new TaskGenerator.GeneratorSettings(
+                settings.card().cardName(),
+                settings.seed(),
+                set,
+                settings.size(),
+                tags);
+    }
+
+    public static GameTask generateDeathmatchTask(BingoGame game) {
+        GeneratorSettings settings = TaskGenerator.generatorSettingsFromGame(game);
+        BingoCardData cardData = new BingoCardData();
+        List<TaskData> allTasks = TaskGenerator.filterBySettings(cardData.getAllTasks(settings.cardName, EnumSet.of(TaskData.TaskType.ITEM)), settings);
+
+        Random generator = new Random(settings.seed);
+
+        if (!allTasks.isEmpty())
+            return new GameTask(allTasks.get(Math.abs(generator.nextInt(allTasks.size()))));
+        else
+            return new GameTask(DEFAULT_TASK);
+    }
+
+    public static List<TaskData> filterBySettings(List<TaskData> tasks, GeneratorSettings settings) {
+        return tasks.stream()
+                .filter(taskData -> !taskData.hasAnyTag(settings.blacklistedTags))
+                .toList();
+    }
+
+    public static GameTask createTaskFromData(TaskData data) {
+        return new GameTask(data);
+    }
+}

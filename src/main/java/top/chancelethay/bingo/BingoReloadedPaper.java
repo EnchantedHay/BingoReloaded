@@ -1,0 +1,400 @@
+package top.chancelethay.bingo;
+
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.protocol.dialog.Dialog;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerShowDialog;
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
+import top.chancelethay.bingo.action.BingoAdminAction;
+import top.chancelethay.bingo.action.BingoAction;
+import top.chancelethay.bingo.action.BingoConfigAction;
+import top.chancelethay.bingo.action.BotCommandAction;
+import top.chancelethay.bingo.action.CommandTemplate;
+import top.chancelethay.bingo.action.TeamChatCommand;
+import top.chancelethay.bingo.api.CardDisplayInfo;
+import top.chancelethay.bingo.api.CardMenu;
+import top.chancelethay.bingo.api.TeamDisplay;
+import top.chancelethay.bingo.api.TeamDisplayPaper;
+import top.chancelethay.bingo.data.BingoMessage;
+import top.chancelethay.bingo.data.DataUpdaterV3_5_0;
+import top.chancelethay.bingo.data.config.BingoConfigurationData;
+import top.chancelethay.bingo.data.config.BingoOptions;
+import top.chancelethay.bingo.data.record.GameRecordData;
+import top.chancelethay.bingo.gameloop.BingoSession;
+import top.chancelethay.bingo.gameloop.phase.PregameLobby;
+import top.chancelethay.bingo.gui.BingoCardMapRenderer;
+import top.chancelethay.bingo.gui.inventory.AdminBingoMenu;
+import top.chancelethay.bingo.gui.inventory.GameHistoryMenu;
+import top.chancelethay.bingo.gui.inventory.TeamCardSelectMenu;
+import top.chancelethay.bingo.gui.inventory.TeamEditorMenu;
+import top.chancelethay.bingo.gui.inventory.TeamSelectionMenu;
+import top.chancelethay.bingo.gui.inventory.VoteMenu;
+import top.chancelethay.bingo.gui.inventory.card.GenericCardMenu;
+import top.chancelethay.bingo.gui.inventory.card.HotswapGenericCardMenu;
+import top.chancelethay.bingo.gui.inventory.card.HotswapTexturedCardMenu;
+import top.chancelethay.bingo.gui.inventory.card.TexturedCardMenu;
+import top.chancelethay.bingo.gui.inventory.creator.BingoCreatorMenu;
+import top.chancelethay.bingo.lib.action.ActionTree;
+import top.chancelethay.bingo.lib.api.BingoReloadedRuntime;
+import top.chancelethay.bingo.lib.api.EntityType;
+import top.chancelethay.bingo.lib.api.EntityTypePaper;
+import top.chancelethay.bingo.lib.api.MenuBoard;
+import top.chancelethay.bingo.lib.api.PaperServerSoftware;
+import top.chancelethay.bingo.lib.api.PlatformResolver;
+import top.chancelethay.bingo.lib.api.ServerSoftware;
+import top.chancelethay.bingo.lib.api.WorldHandle;
+import top.chancelethay.bingo.lib.api.WorldHandlePaper;
+import top.chancelethay.bingo.lib.api.item.StackHandle;
+import top.chancelethay.bingo.lib.api.item.StackHandlePaper;
+import top.chancelethay.bingo.lib.api.player.PlayerHandle;
+import top.chancelethay.bingo.lib.api.player.PlayerHandlePaper;
+import top.chancelethay.bingo.lib.api.player.SharedDisplay;
+import top.chancelethay.bingo.lib.data.core.ConfigDataAccessor;
+import top.chancelethay.bingo.lib.data.core.DataAccessor;
+import top.chancelethay.bingo.lib.data.core.YamlDataAccessor;
+import top.chancelethay.bingo.lib.events.EventListenerPaper;
+import top.chancelethay.bingo.lib.inventory.BasicMenu;
+import top.chancelethay.bingo.lib.inventory.MenuBoardPaper;
+import top.chancelethay.bingo.lib.menu.EmptyDisplay;
+import top.chancelethay.bingo.lib.menu.ScoreboardDisplay;
+import top.chancelethay.bingo.lib.util.ConsoleMessenger;
+import top.chancelethay.bingo.lib.util.PlayerDisplayTranslationKey;
+import top.chancelethay.bingo.placeholder.BingoReloadedPlaceholderExpansion;
+import top.chancelethay.bingo.player.BingoParticipant;
+import top.chancelethay.bingo.settings.PlayerKit;
+import top.chancelethay.bingo.settings.gamemode.BingoGamemodes;
+import top.chancelethay.bingo.util.bstats.Metrics;
+import top.chancelethay.bingo.world.CustomWorldCreator;
+import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.key.Key;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabExecutor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.MapMeta;
+import org.bukkit.map.MapView;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class BingoReloadedPaper extends JavaPlugin implements BingoReloadedRuntime {
+
+	private PaperServerSoftware platform;
+	private BingoReloaded bingo;
+	private MenuBoard menuBoard;
+	private EventListenerPaper eventListener;
+	private SharedDisplay gameDisplay;
+	private SharedDisplay settingsDisplay;
+
+	public BingoReloadedPaper() {
+	}
+
+	@Override
+	public void onLoad() {
+		this.platform = new PaperServerSoftware(this);
+		PlatformResolver.set(new PaperServerSoftware(this));
+
+		PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
+		PacketEvents.getAPI().getSettings().reEncodeByDefault(false)
+				.checkForUpdates(true);
+		PacketEvents.getAPI().load();
+
+
+		this.bingo = new BingoReloaded(this);
+
+		platform.saveResource("bingoreloaded.zip", true);
+		platform.saveResource("bingoreloaded_lite.zip", true);
+
+		bingo.load();
+
+		// Data file updater (backwards compatibility)
+		{
+			DataUpdaterV3_5_0 updater = new DataUpdaterV3_5_0(this);
+			updater.update();
+		}
+	}
+
+	@Override
+	public void onEnable() {
+		this.menuBoard = new MenuBoardPaper(platform, this);
+
+		bingo.enable();
+
+		// Setup PlaceholderAPI
+		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+			new BingoReloadedPlaceholderExpansion(platform, bingo).register();
+
+			BingoMessage.setMessagePreParser( (player, message) -> {
+				if (player == null) {
+					return message;
+				}
+				return PlaceholderAPI.setPlaceholders(((PlayerHandlePaper)player).handle(), message);
+			});
+		}
+
+		eventListener = new EventListenerPaper(this, bingo.getGameManager().eventListener());
+
+//		menuBoard.setPlayerOpenPredicate(player -> player instanceof PlayerHandle handle && this.gameManager.canPlayerOpenMenus(handle));
+
+		Metrics bStatsMetrics = new Metrics(this, 22586);
+		bStatsMetrics.addCustomChart(new Metrics.SimplePie("selected_language",
+				() -> bingo.config().getOptionValue(BingoOptions.LANGUAGE).replace(".yml", "").replace("languages/", "")));
+		bStatsMetrics.addCustomChart(new Metrics.SimplePie("plugin_configuration",
+				() -> "Singular"));
+	}
+
+	@Override
+	public void onDisable() {
+		bingo.disable();
+	}
+
+	@Override
+	public void onConfigReloaded(BingoConfigurationData config) {
+		if (gameDisplay != null) {
+			gameDisplay.clearPlayers();
+		}
+		if (settingsDisplay != null) {
+			settingsDisplay.clearPlayers();
+		}
+
+		if (bingo.config().getOptionValue(BingoOptions.DISABLE_SCOREBOARD_SIDEBAR)) {
+			gameDisplay = new EmptyDisplay();
+			settingsDisplay = new EmptyDisplay();
+		} else {
+			gameDisplay = new ScoreboardDisplay("game");
+			settingsDisplay = new ScoreboardDisplay("lobby");
+		}
+	}
+
+	@Override
+	public DataAccessor getConfigData() {
+		return new ConfigDataAccessor(platform);
+	}
+
+	@Override
+	public Collection<DataAccessor> getDataToRegister() {
+		return List.of(
+				new YamlDataAccessor(platform, "scoreboards", false),
+				new YamlDataAccessor(platform, "placeholders", false),
+				new YamlDataAccessor(platform, "sounds", false));
+	}
+
+	@Override
+	public void setupConfig() {
+		saveConfig();
+		saveDefaultConfig();
+
+		// load default config
+		YamlConfiguration defaultConfigFull = YamlConfiguration.loadConfiguration(new InputStreamReader(this.getResource("config.yml")));
+
+		// load current user config to copy values from
+		FileConfiguration userConfig = getConfig();
+
+		for (String key : userConfig.getKeys(true)) {
+			if (defaultConfigFull.contains(key)) {
+				defaultConfigFull.set(key, userConfig.get(key));
+			}
+		}
+
+		defaultConfigFull.set("version", getPluginMeta().getVersion());
+
+		try {
+			defaultConfigFull.save(new File(getDataFolder(), "config.yml"));
+		} catch (IOException e) {
+			ConsoleMessenger.bug("Could not update config.yml to new version", this);
+		}
+	}
+
+	@Override
+	public Set<EntityType> getValidEntityTypesForStatistics() {
+		Set<EntityType> types = new HashSet<>();
+		Arrays.stream(Material.values())
+				.forEach(mat -> {
+					if (mat.name().contains("_SPAWN_EGG")) {
+						types.add(new EntityTypePaper(org.bukkit.entity.EntityType.valueOf(mat.name().replace("_SPAWN_EGG", ""))));
+					}
+				});
+		return types;
+	}
+
+	@Override
+	public LanguageData getLanguageData(String language) {
+		var lang = new YamlDataAccessor(platform, language, false);
+		var fallback = new YamlDataAccessor(platform, "languages/en_us", false);
+
+		BingoReloaded.addDataAccessor(lang);
+		BingoReloaded.addDataAccessor(fallback);
+
+		return new LanguageData(lang, fallback);
+	}
+
+	@Override
+	public void onLanguageUpdated() {
+		PlayerDisplayTranslationKey.setTranslateFunction(key -> switch(key) {
+			case MENU_PREVIOUS -> BingoMessage.MENU_PREV.asPhrase();
+			case MENU_NEXT -> BingoMessage.MENU_NEXT.asPhrase();
+			case MENU_ACCEPT -> BingoMessage.MENU_ACCEPT.asPhrase();
+			case MENU_SAVE_EXIT -> BingoMessage.MENU_SAVE_EXIT.asPhrase();
+			case MENU_FILTER -> BingoMessage.MENU_FILTER.asPhrase();
+			case MENU_CLEAR_FILTER -> BingoMessage.MENU_CLEAR_FILTER.asPhrase();
+		});
+
+		BasicMenu.pluginTitlePrefix = BingoMessage.MENU_PREFIX.asPhrase();
+	}
+
+	@Override
+	public void registerActions(BingoConfigurationData config) {
+		registerCommand(true, new BingoAdminAction(platform, bingo.getGameManager()));
+		registerCommand(true, new BingoConfigAction(config));
+		registerCommand(false, new BingoAction(bingo, config, bingo.getGameManager()));
+		registerCommand(false, new BotCommandAction(bingo.getGameManager()));
+//		registerCommand("bingotest", new BingoTestCommand(this));
+		if (config.getOptionValue(BingoOptions.ENABLE_TEAM_CHAT)) {
+			TeamChatCommand command = new TeamChatCommand(player -> bingo.getGameManager().getSessionFromWorld(player.world()));
+			registerCommand(false, command);
+			Bukkit.getPluginManager().registerEvents(command, this);
+		}
+	}
+
+	@Override
+	public WorldHandle createBingoWorld(String worldName, Key generationOptions) {
+		return CustomWorldCreator.createWorld(platform, worldName, generationOptions);
+	}
+
+	@Override
+	public ServerSoftware getServerSoftware() {
+		return platform;
+	}
+
+	public StackHandle createCardItemForPlayer(BingoParticipant player) {
+		if (player.sessionPlayer().isEmpty() || player.getCard().isEmpty() && player.getTeam() != null) {
+			return PlayerKit.CARD_ITEM.buildItem();
+		}
+
+		PlayerHandle playerHandle = player.sessionPlayer().get();
+
+		if (!bingo.config().getOptionValue(BingoOptions.USE_MAP_RENDERER)) {
+			return PlayerKit.CARD_ITEM.buildItem();
+		}
+
+		StackHandlePaper mapStack = (StackHandlePaper) PlayerKit.CARD_ITEM_RENDERABLE.buildItem();
+
+		ItemStack handle = mapStack.handle();
+		handle.editMeta(m -> {
+			if (m instanceof MapMeta meta) {
+				MapView view = Bukkit.createMap(((WorldHandlePaper) playerHandle.world()).handle());
+				for (var renderer : new ArrayList<>(view.getRenderers())) {
+					view.removeRenderer(renderer);
+				}
+
+				view.addRenderer(new BingoCardMapRenderer(platform, player.getCard().get(), player.getTeam()));
+				meta.setMapView(view);
+			} else {
+				ConsoleMessenger.bug("No valid map item found to render texture to.", this);
+			}
+		});
+
+		return mapStack;
+	}
+
+	@Override
+	public CardMenu createMenu(boolean textured, CardDisplayInfo displayInfo) {
+		if (textured) {
+			if (displayInfo.mode() == BingoGamemodes.HOTSWAP || displayInfo.mode() == BingoGamemodes.BLITZ) {
+				return new HotswapTexturedCardMenu(bingo, menuBoard, displayInfo);
+			}
+			return new TexturedCardMenu(bingo, menuBoard, displayInfo);
+		}
+
+		if (displayInfo.mode() == BingoGamemodes.HOTSWAP || displayInfo.mode() == BingoGamemodes.BLITZ) {
+			return new HotswapGenericCardMenu(bingo, menuBoard, displayInfo, null);
+		}
+
+		return new GenericCardMenu(bingo, menuBoard, displayInfo, null);
+	}
+
+	@Override
+	public void openBingoMenu(PlayerHandle player, BingoSession session) {
+		if (player.hasPermission("bingo.admin")) {
+			new AdminBingoMenu(menuBoard, session).open(player);
+		} else if (player.hasPermission("bingo.player")) {
+			new TeamSelectionMenu(menuBoard, session).open(player);
+		}
+	}
+
+	@Override
+	public void openTeamEditor(PlayerHandle player) {
+		new TeamEditorMenu(menuBoard).open(player);
+	}
+
+	@Override
+	public void openTeamCardSelect(PlayerHandle player, BingoSession session) {
+		new TeamCardSelectMenu(menuBoard, session).open(player);
+	}
+
+	@Override
+	public void openBingoCreator(PlayerHandle player) {
+		new BingoCreatorMenu(menuBoard).open(player);
+	}
+
+	@Override
+	public void openTeamSelector(PlayerHandle player, BingoSession session) {
+		TeamSelectionMenu menu = new TeamSelectionMenu(menuBoard, session);
+		menu.open(player);
+	}
+
+	@Override
+	public void openVoteMenu(PlayerHandle player, PregameLobby lobby) {
+		VoteMenu menu = new VoteMenu(menuBoard, bingo.config().getOptionValue(BingoOptions.VOTE_LIST), lobby);
+		menu.open(player);
+	}
+
+	@Override
+	public void openGameHistory(PlayerHandle player, GameRecordData historyData) {
+		GameHistoryMenu menu = new GameHistoryMenu(menuBoard, historyData);
+		menu.open(player);
+	}
+
+	@Override
+	public TeamDisplay createTeamDisplay(BingoSession session) {
+		return new TeamDisplayPaper(session);
+	}
+
+	@Override
+	public SharedDisplay gameDisplay() {
+		return gameDisplay;
+	}
+
+	@Override
+	public SharedDisplay settingsDisplay() {
+		return settingsDisplay;
+	}
+
+	public void registerCommand(boolean allowConsole, ActionTree action) {
+		TabExecutor commandExec = new CommandTemplate(allowConsole, action);
+
+		PluginCommand command = getCommand(action.name());
+		if (command != null) {
+			command.setExecutor(commandExec);
+			command.setTabCompleter(commandExec);
+		} else {
+			ConsoleMessenger.bug("Cannot register command named '" + action.name() + "'", this);
+		}
+	}
+
+	public static void showPacketDialog(PlayerHandle player, Dialog dialog) {
+		WrapperPlayServerShowDialog dialogWrapper = new WrapperPlayServerShowDialog(dialog);
+		PacketEvents.getAPI().getPlayerManager().sendPacket(((PlayerHandlePaper) player).handle(), dialogWrapper);
+	}
+
+}
